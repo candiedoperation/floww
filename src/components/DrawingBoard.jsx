@@ -3,31 +3,21 @@ import { fabric } from 'fabric'
 import { Box } from '@mui/material';
 
 const DrawingBoard = () => {
-    const whiteBoardRef = useRef(null);
-    const captureWhiteBoard = (whiteBoard) => {
-        var rect = new fabric.Rect({
-            left: 100,
-            top: 100,
-            fill: 'red',
-            width: 20,
-            height: 20
-        });
-
-        whiteBoard.add(rect);
-    }
-
-    useEffect(() => {
-        const whiteBoard = new fabric.Canvas(whiteBoardRef.current, {
-
-        });
-
-        captureWhiteBoard (whiteBoard);
-        console.log ("WhiteBoard Instance Capture Sent...")
+    const whiteboardRef = React.createRef(null);
+    const fabricRef = React.useCallback((element) => {
+      if (!element) return whiteboardRef.current?.dispose();
+  
+      whiteboardRef.current = new fabric.Canvas(element);
+      manageWhiteboard(whiteboardRef.current);
     }, []);
+
+    const manageWhiteboard = (whiteboard) => {
+        whiteboard.isDrawingMode = true;
+    }
 
     return (
         <Box>
-            <canvas width="800" height="500" ref={whiteBoardRef} />
+            <canvas width="800px" height="500px" ref={fabricRef} />
         </Box>
     );
 }
