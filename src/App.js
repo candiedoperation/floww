@@ -1,8 +1,9 @@
-import DrawingBoard from "./components/DrawingBoard";
+import CollabView from "./integrals/CollabView";
+
 
 function App() {
   return (
-    <DrawingBoard></DrawingBoard>
+    <CollabView></CollabView>
   );
 }
 
