@@ -1,10 +1,53 @@
-import { Chip } from "@mui/material";
-import { Box } from "@mui/system";
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 
 const ColorPaletteBubbles = (props) => {
+    const [colorsAvailable, setColorsAvailable] = React.useState({});
+    let colorButtonObjects = [];
+
+    React.useState(() => {
+        setColorsAvailable({
+            'Deep Yellow': '#ffbf16',
+            'True Orange': '#f5630d',
+            'Deep Pink': '#ff0066',
+            'Tomato Red': '#e61226',
+            'True Purple': '#5c2d8f',
+            'Rainbow Violet': '#aa0089',
+            'Deep Blue': '#014e8a',
+            'Aquatic Blue': '#009fd8',
+            'Sky Blue': '#32ccfe',
+            'Dark Green': '#008c3b',
+            'Light Green': '#66cb00',
+            'Pitch Black': '#000000',
+            'Lightning Gray': '#333333',
+            'Concrete Gray': '#839297',
+            'Pure White': '#ffffff',
+            'Deer Brown': '#7a5446'
+        });
+    }, []);
+
+    Object.keys(colorsAvailable).forEach((color) => {
+        colorButtonObjects.push(
+            <Chip
+                variant="contained"
+                onClick={() => { props.colorPicked(colorsAvailable[color]) }}
+                sx={{ boxShadow: 3 }}
+                style={{
+                    height: '40px',
+                    width: '40px',
+                    borderRadius: '40%',
+                    margin: '4px',
+                    backgroundColor: colorsAvailable[color]
+                }}
+            ></Chip>
+        )
+    })
+
     return (
-        <Box sx={{ display: "flex", ...props.sx, maxWidth: "100%" }} flexWrap={true}>
-            <Chip style={{ backgroundColor: "red", width: '35px', height: '35px', borderRadius: '50%' }} onClick={() => { props.setColor('#454545') }}></Chip>
+        <Box sx={{ ...props.sx }}>
+            {colorButtonObjects}
         </Box>
     );
 }
