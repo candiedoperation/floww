@@ -69,7 +69,8 @@ const DrawingBoard = (props) => {
     }, []);
 
     const manageWhiteboard = (whiteboard) => {
-        whiteboard.isDrawingMode = true;
+        //whiteboard.isDrawingMode = true;
+        props.sendWhiteboardObject(whiteboard);
     }
 
     return (

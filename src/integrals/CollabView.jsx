@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import { Tab, Tabs } from '@mui/material';
+import PhoneLocked from '@mui/icons-material/PhoneLocked';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import AppBar from '@mui/material/AppBar';
@@ -10,8 +12,10 @@ import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import DrawingBoard from '../components/DrawingBoard';
+import GestureIcon from '@mui/icons-material/Gesture';
+import CollabViewPenSettings from '../components/CollabViewPenSettings';
 
-const drawerWidth = 300;
+const drawerWidth = 320;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
@@ -41,8 +45,10 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-start',
 }));
 
-export default function PersistentDrawerRight() {
-  let drawingboardMethods = {};
+export default function CollabView() {
+  let childEventCallbacks = {};
+  const [whiteboardObject, setWhiteboardObject] = React.useState(null);
+  const [currentTab, setCurrentTab] = React.useState(0);
   const [open, setOpen] = React.useState(true);
 
   const handleDrawerOpen = () => {
@@ -55,18 +61,22 @@ export default function PersistentDrawerRight() {
     window.dispatchEvent(new Event('resize'));
   };
 
-  const onGetDrawingBoardMethods = (res) => {
-    drawingboardMethods = res;
+  const onGetWhiteboardObject = (res) => {
+    setWhiteboardObject(res);
+  }
+
+  const switchTab = (event, newValue) => {
+    setCurrentTab(newValue);
   }
 
   return (
     <Box sx={{ height: "100vh", width: "100vw", overflow: 'hidden' }}>
-      <AppBar position="static">
+      <AppBar elevation={0} position="static" sx={{ background: '#ffffff', color: '#000000' }}>
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Tools
-          </Typography>
-
+          <Box sx={{ flexGrow: 1 }}>
+            <Typography variant="h6" component="div" sx={{ lineHeight: 'initial' }}>Floww</Typography>
+            <Typography variant="caption" component="div" sx={{ lineHeight: 'initial' }}>Room: jvksvf</Typography>
+          </Box>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -78,10 +88,10 @@ export default function PersistentDrawerRight() {
           </IconButton>
         </Toolbar>
       </AppBar>
-
+      <Divider />
       <Box sx={{ height: "calc(100% - 60px)", width: "100%", display: 'flex', flexDirection: 'row' }}>
         <Main open={open}>
-          <DrawingBoard sendAvailableMethods={onGetDrawingBoardMethods}></DrawingBoard>
+          <DrawingBoard sendWhiteboardObject={onGetWhiteboardObject}></DrawingBoard>
         </Main>
         <Drawer
           sx={{
@@ -89,6 +99,7 @@ export default function PersistentDrawerRight() {
             flexShrink: 0,
             '& .MuiDrawer-paper': {
               width: drawerWidth,
+              overflow: 'hidden',
             },
           }}
           variant="persistent"
@@ -101,7 +112,26 @@ export default function PersistentDrawerRight() {
             </IconButton>
           </DrawerHeader>
           <Divider />
-          GAS
+          <Box sx={{ display: 'flex', height: '100%' }}>
+            <Box sx={{ flexGrow: 1 }}>
+              <CollabViewPenSettings whiteboardObject={whiteboardObject} addFunctions={(fn) => { childEventCallbacks.cvps = fn }} sx={{ display: (currentTab == 0 ? 'block' : 'none') }}></CollabViewPenSettings>
+              <Box sx={{ display: (currentTab == 1 ? 'block' : 'none') }}>t2</Box>
+            </Box>
+            <Divider orientation='vertical' />
+            <Box>
+              <Tabs
+                orientation="vertical"
+                variant="scrollable"
+                value={currentTab}
+                onChange={switchTab}
+                aria-label="Vertical tabs example"
+                sx={{ borderColor: 'divider' }}
+              >
+                <Tab icon={<GestureIcon />} aria-label="Pen Color" />
+                <Tab icon={<PhoneLocked />} aria-label="phone" />
+              </Tabs>
+            </Box>
+          </Box>
         </Drawer>
       </Box>
     </Box>
