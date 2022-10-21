@@ -113,7 +113,7 @@ export default function CollabView() {
           </DrawerHeader>
           <Divider />
           <Box sx={{ display: 'flex', height: '100%' }}>
-            <Box sx={{ flexGrow: 1 }}>
+            <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
               <CollabViewPenSettings whiteboardObject={whiteboardObject} addFunctions={(fn) => { childEventCallbacks.cvps = fn }} sx={{ display: (currentTab == 0 ? 'block' : 'none') }}></CollabViewPenSettings>
               <Box sx={{ display: (currentTab == 1 ? 'block' : 'none') }}>t2</Box>
             </Box>
