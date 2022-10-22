@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { fabric } from 'fabric'
+import { fabric } from 'floww-whiteboard'
 import { Box, Paper } from '@mui/material';
 
 const DrawingBoard = (props) => {
@@ -52,8 +52,8 @@ const DrawingBoard = (props) => {
 
     const updateCanvasAspect = (newWidth, newHeight) => {
         /* For standardizing the Zoom Parameter among all inst
-        -nces, We compare ratios with a 640 x 360 resolution*/
-        let scalingFactor = newWidth / 640;
+        -nces, We compare ratios with a 1920 x 1080 resolution*/
+        let scalingFactor = newWidth / 1920;
         whiteboardRef.current.setZoom(scalingFactor);
 
         whiteboardRef.current.setDimensions({

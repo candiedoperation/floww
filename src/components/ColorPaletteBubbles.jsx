@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
+import Tooltip from '@mui/material/Tooltip';
 
 const ColorPaletteBubbles = (props) => {
     const [colorsAvailable, setColorsAvailable] = React.useState({});
@@ -30,18 +31,20 @@ const ColorPaletteBubbles = (props) => {
 
     Object.keys(colorsAvailable).forEach((color) => {
         colorButtonObjects.push(
-            <Chip
-                variant="contained"
-                onClick={() => { props.colorPicked(colorsAvailable[color]) }}
-                sx={{ boxShadow: 3 }}
-                style={{
-                    height: '40px',
-                    width: '40px',
-                    borderRadius: '40%',
-                    margin: '4px',
-                    backgroundColor: colorsAvailable[color]
-                }}
-            ></Chip>
+            <Tooltip title={color} placement="top">
+                <Chip
+                    variant="contained"
+                    onClick={() => { props.colorPicked(colorsAvailable[color]) }}
+                    sx={{ boxShadow: 3 }}
+                    style={{
+                        height: '40px',
+                        width: '40px',
+                        borderRadius: '40%',
+                        margin: '4px',
+                        backgroundColor: colorsAvailable[color]
+                    }}
+                ></Chip>
+            </Tooltip>
         )
     })
 
