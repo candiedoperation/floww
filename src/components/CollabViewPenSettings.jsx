@@ -76,7 +76,7 @@ const CollabViewPenSettings = (props) => {
     }, [brushType]);
 
     return (
-        <Box sx={{ ...props.sx, padding: '15px' }}>
+        <Box sx={{ ...props.sx, padding: '15px', marginBottom: '70px' }}>
             <Typography variant="h6">Pen Settings</Typography>
             <FormControlLabel control={<Switch disabled={whiteboardObject == null ? true : false} checked={isDrawingMode} onChange={() => { setIsDrawingMode(!isDrawingMode) }} />} label="Freeform Drawing" />
             <FormControlLabel control={<Switch disabled={whiteboardObject == null ? true : false} checked={isEraserMode} onChange={() => { setIsEraserMode(!isEraserMode) }} />} label="Erase Mode" />

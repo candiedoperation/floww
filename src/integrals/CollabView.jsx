@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { io } from 'socket.io-client';
 import { styled } from '@mui/material/styles';
 import { Tab, Tabs } from '@mui/material';
-import PhoneLocked from '@mui/icons-material/PhoneLocked';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import AppBar from '@mui/material/AppBar';
@@ -13,7 +13,9 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import DrawingBoard from '../components/DrawingBoard';
 import GestureIcon from '@mui/icons-material/Gesture';
+import PeopleIcon from '@mui/icons-material/People';
 import CollabViewPenSettings from '../components/CollabViewPenSettings';
+import CollabViewActiveUsers from '../components/CollabViewActiveUsers';
 
 const drawerWidth = 320;
 
@@ -47,6 +49,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 export default function CollabView() {
   let childEventCallbacks = {};
+  const socket = io("http://192.168.29.229:3001");
+  const [activeUsers, setActiveUsers] = React.useState([]);
   const [whiteboardObject, setWhiteboardObject] = React.useState(null);
   const [currentTab, setCurrentTab] = React.useState(0);
   const [open, setOpen] = React.useState(true);
@@ -91,7 +95,7 @@ export default function CollabView() {
       <Divider />
       <Box sx={{ height: "calc(100% - 60px)", width: "100%", display: 'flex', flexDirection: 'row' }}>
         <Main open={open}>
-          <DrawingBoard sendWhiteboardObject={onGetWhiteboardObject}></DrawingBoard>
+          <DrawingBoard socketIO={socket} sendWhiteboardObject={onGetWhiteboardObject}></DrawingBoard>
         </Main>
         <Drawer
           sx={{
@@ -113,9 +117,9 @@ export default function CollabView() {
           </DrawerHeader>
           <Divider />
           <Box sx={{ display: 'flex', height: '100%' }}>
-            <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
-              <CollabViewPenSettings whiteboardObject={whiteboardObject} addFunctions={(fn) => { childEventCallbacks.cvps = fn }} sx={{ display: (currentTab == 0 ? 'block' : 'none') }}></CollabViewPenSettings>
-              <Box sx={{ display: (currentTab == 1 ? 'block' : 'none') }}>t2</Box>
+            <Box sx={{ flexGrow: 1, overflowY: 'auto', overflowX: 'hidden' }}>
+              <CollabViewPenSettings whiteboardObject={whiteboardObject} sx={{ display: (currentTab == 0 ? 'block' : 'none') }}></CollabViewPenSettings>
+              <CollabViewActiveUsers activeUsers={activeUsers} sx={{ display: (currentTab == 1 ? 'block' : 'none') }}></CollabViewActiveUsers>
             </Box>
             <Divider orientation='vertical' />
             <Box>
@@ -128,7 +132,7 @@ export default function CollabView() {
                 sx={{ borderColor: 'divider' }}
               >
                 <Tab icon={<GestureIcon />} aria-label="Pen Color" />
-                <Tab icon={<PhoneLocked />} aria-label="phone" />
+                <Tab icon={<PeopleIcon />} aria-label="phone" />
               </Tabs>
             </Box>
           </Box>
