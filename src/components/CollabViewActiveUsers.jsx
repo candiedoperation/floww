@@ -10,20 +10,22 @@ import Avatar from '@mui/material/Avatar'
 
 const CollabViewActiveUsers = (props) => {
     let socketListener = null;
-    const activeUsersList = [];
     const [activeUsers, setActiveUsers] = React.useState([]);
 
     React.useState(() => {
+        props.socketIO.on('cbv-cachedActiveUsersList', (uList) => {
+            setActiveUsers((activeUsers) => uList)
+        })
+
         props.socketIO.on('cbv-newActiveUser', (user) => {
-            activeUsersList.push(user);
             setActiveUsers((activeUsers) => [...activeUsers, user])
         });
 
         props.socketIO.on('cbv-delActiveUser', (user) => {
-            setActiveUsers((activeUsers) => 
+            setActiveUsers((activeUsers) =>
                 activeUsers.filter((activeUser) => (activeUser.uId != user.uId))
             );
-        })
+        });
     }, []);
 
     return (
