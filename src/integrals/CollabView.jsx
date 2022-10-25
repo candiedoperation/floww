@@ -112,7 +112,7 @@ export default function CollabView() {
       <Divider />
       <Box sx={{ height: "calc(100% - 60px)", width: "100%", display: 'flex', flexDirection: 'row' }}>
         <Main open={open}>
-          <DrawingBoard socketIO={socket} sendWhiteboardObject={onGetWhiteboardObject}></DrawingBoard>
+          <DrawingBoard uName={myName} roomName={'jvksvf'} socketIO={socket} sendWhiteboardObject={onGetWhiteboardObject}></DrawingBoard>
         </Main>
         <Drawer
           sx={{

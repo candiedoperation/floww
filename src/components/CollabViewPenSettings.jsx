@@ -5,38 +5,15 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { Box } from "@mui/system";
 import ColorPaletteBubbles from './ColorPaletteBubbles';
+import getFlowwBrushObject from '../middleware/getFlowwBrushObject';
 
 const CollabViewPenSettings = (props) => {
     const [isDrawingMode, setIsDrawingMode] = React.useState(false);
     const [isEraserMode, setIsEraserMode] = React.useState(false);
-    const [nibWidth, setNibWidth] = React.useState(0);
+    const [nibWidth, setNibWidth] = React.useState(1);
     const [brushType, setBrushType] = React.useState('PencilBrush');
     const [whiteboardObject, setWhiteboardObject] = React.useState({});
     const [nibColor, setNibColor] = React.useState("#000000");
-
-    const getBrushObject = (brushName) => {
-        switch (brushName) {
-            case 'PencilBrush': {
-                return new fabric.PencilBrush(whiteboardObject);
-            }
-
-            case 'EraserBrush': {
-                return new fabric.EraserBrush(whiteboardObject);
-            }
-
-            case 'CircleBrush': {
-                return new fabric.CircleBrush(whiteboardObject);
-            }
-
-            case 'SprayBrush': {
-                return new fabric.SprayBrush(whiteboardObject);
-            }
-
-            default: {
-                return new fabric.PencilBrush(whiteboardObject);
-            }
-        }
-    }
 
     React.useEffect(() => {
         setWhiteboardObject(props.whiteboardObject);
@@ -44,15 +21,20 @@ const CollabViewPenSettings = (props) => {
 
     React.useEffect(() => {
         whiteboardObject.isDrawingMode = isDrawingMode;
+        if (isDrawingMode) {
+            whiteboardObject.freeDrawingBrush = getFlowwBrushObject(brushType, whiteboardObject);
+            whiteboardObject.freeDrawingBrush.width = nibWidth;
+            whiteboardObject.freeDrawingBrush.color = nibColor;
+        }
     }, [isDrawingMode]);
 
     React.useEffect(() => {
         if (whiteboardObject.freeDrawingBrush) {
             if (isEraserMode == true) {
-                whiteboardObject.freeDrawingBrush = getBrushObject('EraserBrush');
+                whiteboardObject.freeDrawingBrush = getFlowwBrushObject('EraserBrush', whiteboardObject);
                 whiteboardObject.freeDrawingBrush.width = nibWidth;
             } else {
-                whiteboardObject.freeDrawingBrush = getBrushObject(brushType);
+                whiteboardObject.freeDrawingBrush = getFlowwBrushObject(brushType, whiteboardObject);
                 whiteboardObject.freeDrawingBrush.width = nibWidth;
                 whiteboardObject.freeDrawingBrush.color = nibColor;
             }
@@ -69,7 +51,7 @@ const CollabViewPenSettings = (props) => {
 
     React.useEffect(() => {
         if (whiteboardObject.freeDrawingBrush) {
-            whiteboardObject.freeDrawingBrush = getBrushObject(brushType);
+            whiteboardObject.freeDrawingBrush = getFlowwBrushObject(brushType, whiteboardObject);
             whiteboardObject.freeDrawingBrush.width = nibWidth;
             whiteboardObject.freeDrawingBrush.color = nibColor;
         }
