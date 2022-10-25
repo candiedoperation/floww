@@ -16,8 +16,26 @@ import GestureIcon from '@mui/icons-material/Gesture';
 import PeopleIcon from '@mui/icons-material/People';
 import CollabViewPenSettings from '../components/CollabViewPenSettings';
 import CollabViewActiveUsers from '../components/CollabViewActiveUsers';
+import { ConstructionOutlined } from '@mui/icons-material';
 
 const drawerWidth = 320;
+const myName = Math.random();
+const socket = io("http://192.168.29.229:3001");
+
+socket.on('connect', () => {
+  //let newUserData = {};
+  //newUserData[socket.id] = { name: myName };
+  console.log("joining room: jvksvf")
+  socket.emit('cbv-joinRoom', {
+    roomName: 'jvksvf'
+  });
+
+  console.log("emiting")
+  socket.emit('cbv-newActiveUser', {
+    uId: socket.id,
+    uName: myName
+  });
+});
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
@@ -48,9 +66,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 export default function CollabView() {
-  let childEventCallbacks = {};
-  const socket = io("http://192.168.29.229:3001");
-  const [activeUsers, setActiveUsers] = React.useState([]);
   const [whiteboardObject, setWhiteboardObject] = React.useState(null);
   const [currentTab, setCurrentTab] = React.useState(0);
   const [open, setOpen] = React.useState(true);
@@ -119,7 +134,7 @@ export default function CollabView() {
           <Box sx={{ display: 'flex', height: '100%' }}>
             <Box sx={{ flexGrow: 1, overflowY: 'auto', overflowX: 'hidden' }}>
               <CollabViewPenSettings whiteboardObject={whiteboardObject} sx={{ display: (currentTab == 0 ? 'block' : 'none') }}></CollabViewPenSettings>
-              <CollabViewActiveUsers activeUsers={activeUsers} sx={{ display: (currentTab == 1 ? 'block' : 'none') }}></CollabViewActiveUsers>
+              <CollabViewActiveUsers socketIO={socket} sx={{ display: (currentTab == 1 ? 'block' : 'none') }}></CollabViewActiveUsers>
             </Box>
             <Divider orientation='vertical' />
             <Box>

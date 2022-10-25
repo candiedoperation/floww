@@ -9,31 +9,39 @@ import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar'
 
 const CollabViewActiveUsers = (props) => {
-    const [auElements, setAuElements] = React.useState([]);
+    let socketListener = null;
+    const activeUsersList = [];
+    const [activeUsers, setActiveUsers] = React.useState([]);
 
-    props
-        .activeUsers
-        .forEach((user) => {
-            setAuElements([
-                ...auElements,
-                <List>
-                    <ListItem disablePadding>
+    React.useState(() => {
+        props.socketIO.on('cbv-newActiveUser', (user) => {
+            activeUsersList.push(user);
+            setActiveUsers((activeUsers) => [...activeUsers, user])
+        });
+
+        props.socketIO.on('cbv-delActiveUser', (user) => {
+            setActiveUsers((activeUsers) => 
+                activeUsers.filter((activeUser) => (activeUser.uId != user.uId))
+            );
+        })
+    }, []);
+
+    return (
+        <Box sx={{ ...props.sx, marginBottom: '70px' }}>
+            <List>
+                {activeUsers.map((user) => (
+                    <ListItem key={user.uId} disablePadding>
                         <ListItemButton>
                             <ListItemAvatar>
                                 <Avatar>
                                     {(user.photo ? <Person2Icon /> : <Person2Icon />)}
                                 </Avatar>
                             </ListItemAvatar>
-                            <ListItemText primary={user.name} secondary={user.sockId} />
+                            <ListItemText primaryTypographyProps={{ textOverflow: 'ellipsis', overflow: 'hidden' }} secondaryTypographyProps={{ textOverflow: 'ellipsis', overflow: 'hidden' }} primary={user.uName} secondary={user.uId} />
                         </ListItemButton>
                     </ListItem>
-                </List>
-            ])
-        })
-
-    return (
-        <Box sx={{ ...props.sx, marginBottom: '70px' }}>
-            {auElements}
+                ))}
+            </List>
         </Box>
     );
 }
