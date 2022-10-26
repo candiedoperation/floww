@@ -1,7 +1,7 @@
 import { fabric } from "floww-whiteboard";
 
-const getFlowwBrushObject = (brushName, whiteboardObject) => {
-    if (whiteboardObject) whiteboardObject.flowwBrushIdentifier = brushName;
+const getFlowwBrushObject = (brushName, whiteboardObject, inhibitIdentifier) => {
+    if (inhibitIdentifier == undefined) whiteboardObject.flowwBrushIdentifier = brushName;
     switch (brushName) {
         case 'PencilBrush': {
             return new fabric.PencilBrush(whiteboardObject);

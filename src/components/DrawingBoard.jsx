@@ -122,7 +122,8 @@ const DrawingBoard = (props) => {
         })
 
         socket.on('cbv-nibPress', (nibData) => {
-            activeUsersBrushes[nibData.uId] = getFlowwBrushObject(nibData.nibId, whiteboard);
+            console.log(nibData);
+            activeUsersBrushes[nibData.uId] = getFlowwBrushObject(nibData.nibId, whiteboard, true);
             activeUsersBrushes[nibData.uId].color = nibData.nibColor;
             activeUsersBrushes[nibData.uId].width = nibData.nibWidth;
 
