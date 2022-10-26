@@ -33,6 +33,7 @@ const ColorPaletteBubbles = (props) => {
         colorButtonObjects.push(
             <Tooltip title={color} placement="top">
                 <Chip
+                    disabled={props.disabled}
                     variant="contained"
                     onClick={() => { props.colorPicked(colorsAvailable[color]) }}
                     sx={{ boxShadow: 3 }}

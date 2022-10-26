@@ -150,7 +150,13 @@ const DrawingBoard = (props) => {
         });
 
         socket.on('cbv-createSelection', (e) => {
-            let selection = new fabric.ActiveSelection(e.event, { canvas: whiteboard });
+            let selection = new fabric.ActiveSelection([], { canvas: whiteboard });
+            selection.aCoords = {
+                tl: {x: 100, y: 100},
+                tr: {x: 200, y: 100},
+                bl: {x: 100, y: 200},
+                br: {x: 200, y: 200}
+            }
             whiteboard.setActiveObject(selection);
         });
 
@@ -227,6 +233,7 @@ const DrawingBoard = (props) => {
                                         avatar={<Avatar>A</Avatar>}
                                         label={user.uName.toString().slice(2, 5)}
                                         ref={activeUsersRefs[user.uId]}
+                                        variant="outlined"
                                         style={{
                                             position: 'absolute',
                                         }}

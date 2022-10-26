@@ -64,11 +64,11 @@ const CollabViewPenSettings = (props) => {
         <Box sx={{ ...props.sx, padding: '15px', marginBottom: '70px' }}>
             <Typography variant="h6">Pen Settings</Typography>
             <FormControlLabel control={<Switch disabled={whiteboardObject == null ? true : false} checked={isDrawingMode} onChange={() => { setIsDrawingMode(!isDrawingMode) }} />} label="Freeform Drawing" />
-            <FormControlLabel control={<Switch disabled={whiteboardObject == null ? true : false} checked={isEraserMode} onChange={() => { setIsEraserMode(!isEraserMode) }} />} label="Erase Mode" />
+            <FormControlLabel control={<Switch disabled={whiteboardObject == null || isDrawingMode == false ? true : false} checked={isEraserMode} onChange={() => { setIsEraserMode(!isEraserMode) }} />} label="Erase Mode" />
             <Typography variant="p" component="div" sx={{ marginTop: '10px' }}>Nib Type</Typography>
             <Select
                 value={brushType}
-                disabled={(whiteboardObject == null || isEraserMode == true) ? true : false}
+                disabled={(whiteboardObject == null || isEraserMode == true || isDrawingMode == false) ? true : false}
                 size='small'
                 onChange={(e) => { setBrushType(e.target.value) }}
                 sx={{ width: '100%', marginTop: '10px' }}
@@ -77,10 +77,10 @@ const CollabViewPenSettings = (props) => {
                 <MenuItem value={'CircleBrush'}>Bubbles</MenuItem>
                 <MenuItem value={'SprayBrush'}>Spray Can</MenuItem>
             </Select>
-            <Typography variant="p" component="div" sx={{ marginTop: '10px' }}>Nib Width</Typography>
-            <Slider onChangeCommitted={(e, w) => { setNibWidth(w) }} min={1} max={50} step={1} disabled={whiteboardObject == null ? true : false} defaultValue={1} aria-label="Default" valueLabelDisplay="auto" />
+            <Typography variant="p" component="div" sx={{ marginTop: '10px' }}>{(isEraserMode ? 'Eraser Width' : 'Nib Width')}</Typography>
+            <Slider onChangeCommitted={(e, w) => { setNibWidth(w) }} min={1} max={50} step={1} disabled={(whiteboardObject == null || isDrawingMode == false) ? true : false} defaultValue={1} aria-label="Default" valueLabelDisplay="auto" />
             <Typography variant="p" component="div" sx={{ marginTop: '10px' }}>Nib Color</Typography>
-            <ColorPaletteBubbles colorPicked={(nC) => { setNibColor(nC) }} sx={{ marginTop: '10px' }}></ColorPaletteBubbles>
+            <ColorPaletteBubbles disabled={(whiteboardObject == null || isDrawingMode == false) ? true : false} colorPicked={(nC) => { setNibColor(nC) }} sx={{ marginTop: '10px' }}></ColorPaletteBubbles>
         </Box>
     );
 }
