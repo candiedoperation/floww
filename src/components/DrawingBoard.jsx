@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { fabric } from 'floww-whiteboard'
-import { Box, Paper } from '@mui/material';
+import { Box, Chip, Paper, Tooltip } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import getFlowwBrushObject from './../middleware/getFlowwBrushObject';
+import getFlowwCursor from '../middleware/getFlowwCursor';
 
 //Placing outside since object resets on avatar state change (re-render)...
 let activeUsersRefs = {};
@@ -92,11 +93,19 @@ const DrawingBoard = (props) => {
     const manageWhiteboard = (whiteboard) => {
         //Send Whiteboard Object to Parent for activating Panel Controls
         props.sendWhiteboardObject(whiteboard);
+        whiteboard.freeDrawingCursor = getFlowwCursor();
         whiteboard.isDrawing = false;
 
         const whiteboardSelectionKeyEvent = (e) => {
             if (e.key == 'Delete') {
                 window.removeEventListener('keydown', whiteboardSelectionKeyEvent, false);
+                props.socketIO.emit('cbv-delWbObjects', {
+                    roomName: props.roomName,
+                    uName: props.uName,
+                    uId: props.socketIO.id,
+                    activeObjects: whiteboard.getActiveObjects()
+                });
+
                 whiteboard.getActiveObjects().forEach((object) => {
                     whiteboard.remove(object);
                 })
@@ -122,7 +131,6 @@ const DrawingBoard = (props) => {
         })
 
         socket.on('cbv-nibPress', (nibData) => {
-            console.log(nibData);
             activeUsersBrushes[nibData.uId] = getFlowwBrushObject(nibData.nibId, whiteboard, true);
             activeUsersBrushes[nibData.uId].color = nibData.nibColor;
             activeUsersBrushes[nibData.uId].width = nibData.nibWidth;
@@ -139,6 +147,11 @@ const DrawingBoard = (props) => {
         socket.on('cbv-nibLift', (nibData) => {
             activeUsersBrushes[nibData.uId]
                 .onMouseUp(nibData.event);
+        });
+
+        socket.on('cbv-createSelection', (e) => {
+            let selection = new fabric.ActiveSelection(e.event, { canvas: whiteboard });
+            whiteboard.setActiveObject(selection);
         });
 
         whiteboard.on("mouse:down", (nibEvent) => {
@@ -183,8 +196,16 @@ const DrawingBoard = (props) => {
             }
         });
 
-        whiteboard.on("selection:created", () => {
+        whiteboard.on("selection:created", (e) => {
             window.addEventListener('keydown', whiteboardSelectionKeyEvent);
+            socket.emit('cbv-createSelection', {
+                roomName: props.roomName,
+                uName: props.uName,
+                uId: props.socketIO.id,
+                event: e.selected
+            })
+
+            console.log(e);
         });
 
         whiteboard.on("selection:cleared", () => {
@@ -202,24 +223,22 @@ const DrawingBoard = (props) => {
                                 activeUsersRefs[user.uId] = React.createRef(null);
                                 activeUsersBrushes[user.uId] = new fabric.PencilBrush();
                                 return (
-                                    <Avatar
+                                    <Chip
+                                        avatar={<Avatar>A</Avatar>}
+                                        label={user.uName.toString().slice(2, 5)}
                                         ref={activeUsersRefs[user.uId]}
                                         style={{
                                             position: 'absolute',
-                                            width: '2rem',
-                                            height: '2rem'
-                                        }
-                                        }>
-                                        {user.uName.toString().slice(2, 5)}
-                                    </Avatar>
+                                        }}
+                                    />
                                 )
                             })
                         }
                     </Box>
                     <canvas style={{ borderRadius: "10px" }} width="100px" height="100px" ref={fabricRef} />
                 </Paper>
-            </Box>
-        </Box>
+            </Box >
+        </Box >
     );
 }
 

@@ -6,6 +6,7 @@ import Select from '@mui/material/Select';
 import { Box } from "@mui/system";
 import ColorPaletteBubbles from './ColorPaletteBubbles';
 import getFlowwBrushObject from '../middleware/getFlowwBrushObject';
+import getFlowwCursor from '../middleware/getFlowwCursor';
 
 const CollabViewPenSettings = (props) => {
     const [isDrawingMode, setIsDrawingMode] = React.useState(false);
@@ -32,9 +33,11 @@ const CollabViewPenSettings = (props) => {
         if (whiteboardObject.freeDrawingBrush) {
             if (isEraserMode == true) {
                 whiteboardObject.freeDrawingBrush = getFlowwBrushObject('EraserBrush', whiteboardObject);
+                whiteboardObject.freeDrawingCursor = getFlowwCursor('EraserPen');
                 whiteboardObject.freeDrawingBrush.width = nibWidth;
             } else {
                 whiteboardObject.freeDrawingBrush = getFlowwBrushObject(brushType, whiteboardObject);
+                whiteboardObject.freeDrawingCursor = getFlowwCursor('LaserPen');
                 whiteboardObject.freeDrawingBrush.width = nibWidth;
                 whiteboardObject.freeDrawingBrush.color = nibColor;
             }
