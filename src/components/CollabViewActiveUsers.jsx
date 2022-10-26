@@ -9,12 +9,14 @@ import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar'
 
 const CollabViewActiveUsers = (props) => {
-    let socketListener = null;
     const [activeUsers, setActiveUsers] = React.useState([]);
 
     React.useState(() => {
         props.socketIO.on('cbv-cachedActiveUsersList', (uList) => {
-            setActiveUsers((activeUsers) => uList)
+            setActiveUsers((activeUsers) => [{
+                uName: 'You',
+                uId: props.socketIO.id
+            }, ...uList])
         })
 
         props.socketIO.on('cbv-newActiveUser', (user) => {
@@ -39,7 +41,7 @@ const CollabViewActiveUsers = (props) => {
                                     {(user.photo ? <Person2Icon /> : <Person2Icon />)}
                                 </Avatar>
                             </ListItemAvatar>
-                            <ListItemText primaryTypographyProps={{ textOverflow: 'ellipsis', overflow: 'hidden' }} secondaryTypographyProps={{ textOverflow: 'ellipsis', overflow: 'hidden' }} primary={user.uName} secondary={user.uId} />
+                            <ListItemText primaryTypographyProps={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }} secondaryTypographyProps={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }} primary={user.uName} secondary={user.uId} />
                         </ListItemButton>
                     </ListItem>
                 ))}

@@ -14,6 +14,8 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import DrawingBoard from '../components/DrawingBoard';
 import GestureIcon from '@mui/icons-material/Gesture';
 import PeopleIcon from '@mui/icons-material/People';
+import ChatIcon from '@mui/icons-material/Chat';
+import CollabViewComments from '../components/CollabViewComments';
 import CollabViewPenSettings from '../components/CollabViewPenSettings';
 import CollabViewActiveUsers from '../components/CollabViewActiveUsers';
 
@@ -137,6 +139,7 @@ export default function CollabView() {
             <Box sx={{ flexGrow: 1, overflowY: 'auto', overflowX: 'hidden' }}>
               <CollabViewPenSettings whiteboardObject={whiteboardObject} sx={{ display: (currentTab == 0 ? 'block' : 'none') }}></CollabViewPenSettings>
               <CollabViewActiveUsers socketIO={socket} uName={myName} sx={{ display: (currentTab == 1 ? 'block' : 'none') }}></CollabViewActiveUsers>
+              <CollabViewComments></CollabViewComments>
             </Box>
             <Divider orientation='vertical' />
             <Box>
@@ -150,6 +153,7 @@ export default function CollabView() {
               >
                 <Tab icon={<GestureIcon />} aria-label="Pen Color" />
                 <Tab icon={<PeopleIcon />} aria-label="phone" />
+                <Tab icon={<ChatIcon />} aria-label="phone" />
               </Tabs>
             </Box>
           </Box>
