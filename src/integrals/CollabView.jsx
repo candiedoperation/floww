@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { io } from 'socket.io-client';
 import { styled } from '@mui/material/styles';
-import { Tab, Tabs } from '@mui/material';
+import { Badge, Tab, Tabs } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import AppBar from '@mui/material/AppBar';
@@ -25,16 +25,6 @@ const myName = Math.random();
 const socket = io("http://192.168.29.229:3001");
 
 socket.on('connect', () => {
-  //let newUserData = {};
-  //newUserData[socket.id] = { name: myName };
-  /*console.log("joining room: jvksvf")
-  socket.emit('cbv-joinRoom', {
-    roomName: 'jvksvf'
-  });*/
-
-  console.log(`connected: ${socket.id}`)
-
-  console.log("emiting")
   socket.emit('cbv-newActiveUser', {
     uId: socket.id,
     uName: myName,
@@ -72,6 +62,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 export default function CollabView() {
   const [whiteboardObject, setWhiteboardObject] = React.useState(null);
+  const [commentBadgeValue, setCommentBadgeValue] = React.useState(0);
   const [currentTab, setCurrentTab] = React.useState(0);
   const [open, setOpen] = React.useState(true);
 
@@ -92,6 +83,16 @@ export default function CollabView() {
   const switchTab = (event, newValue) => {
     setCurrentTab(newValue);
   }
+
+  React.useEffect(() => {
+    socket.on('cbv-comment', (m) => {
+      if (currentTab != 2) setCommentBadgeValue((val) => (val + 1))
+    })
+  }, [])
+
+  React.useEffect(() => {
+    if (currentTab == 2) setCommentBadgeValue(0);
+  }, [currentTab]);
 
   return (
     <Box sx={{ height: "100vh", width: "100vw", overflow: 'hidden' }}>
@@ -140,7 +141,7 @@ export default function CollabView() {
             <Box sx={{ flexGrow: 1, overflowY: 'auto', overflowX: 'hidden' }}>
               <CollabViewPenSettings whiteboardObject={whiteboardObject} sx={{ display: (currentTab == 0 ? 'block' : 'none') }}></CollabViewPenSettings>
               <CollabViewActiveUsers socketIO={socket} uName={myName} sx={{ display: (currentTab == 1 ? 'block' : 'none') }}></CollabViewActiveUsers>
-              <CollabViewComments socketIO={socket} sx={{ display: (currentTab == 2 ? 'flex' : 'none') }}></CollabViewComments>
+              <CollabViewComments roomName={'jvksvf'} socketIO={socket} uName={myName} sx={{ display: (currentTab == 2 ? 'flex' : 'none') }}></CollabViewComments>
             </Box>
             <Divider orientation='vertical' />
             <Box>
@@ -154,7 +155,7 @@ export default function CollabView() {
               >
                 <Tab icon={<GestureIcon />} aria-label="Pen Color" />
                 <Tab icon={<PeopleIcon />} aria-label="Participants" />
-                <Tab icon={<ChatIcon />} aria-label="Messages" />
+                <Tab icon={<Badge badgeContent={commentBadgeValue} color="primary"><ChatIcon /></Badge>} aria-label="Messages" />
                 <Tab icon={<PollIcon />} aria-label="Poll" />
               </Tabs>
             </Box>
