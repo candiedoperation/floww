@@ -6,6 +6,7 @@ import SendIcon from "@mui/icons-material/Send";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
+import moment from 'moment';
 
 const CollabViewComments = (props) => {
     const [comments, setComments] = React.useState([]);
@@ -38,21 +39,25 @@ const CollabViewComments = (props) => {
 
     return (
         <Box sx={{ ...props.sx, height: '100%', flexDirection: 'column' }}>
-            <Box sx={{ flexGrow: 1, padding: '8px' }}>
+            <Box sx={{ padding: '8px', flexGrow: 1, maxHeight: '100%', overflowY: 'scroll' }}>
                 {
                     comments.map((comment) => {
                         return (
-                            <Paper sx={{ padding: '5px', margin: '5px', display: 'flex', flexDirection: 'column' }} variant="outlined">
-                                <Typography variant="caption">{comment.uName}</Typography>
-                                <Typography variant="p">{comment.message}</Typography>
-                                <Typography mt="3px" sx={{ alignSelf: 'end' }} variant="caption">9:45AM</Typography>
-                            </Paper>
+                            <Box sx={{ display: 'flex', margin: '5px', flexDirection: 'column' }}>
+                                <Paper sx={{ padding: '5px', display: 'flex', flexDirection: 'column' }} variant="outlined">
+                                    <Typography variant="caption">{comment.uName}</Typography>
+                                    <Typography variant="p">{comment.message}</Typography>
+                                </Paper>
+                                <Typography mt="3px" sx={{ alignSelf: 'end' }} variant="caption">
+                                    {moment.utc(comment.time).local().format("hh:mm A")}
+                                </Typography>
+                            </Box>
                         )
                     })
                 }
             </Box>
-            <Box sx={{ padding: '8px', display: 'flex' }}>
-                <OutlinedInput placeholder='Message' variant="outlined" value={msgValue} onKeyDown={(k) => {if (k.key == 'Enter') sendMessage() }} onChange={(e) => { setMsgValue(e.target.value) }} endAdornment={
+            <Box sx={{ margin: '8px', display: 'flex' }}>
+                <OutlinedInput placeholder='Message' variant="outlined" value={msgValue} onKeyDown={(k) => { if (k.key == 'Enter') sendMessage() }} onChange={(e) => { setMsgValue(e.target.value) }} endAdornment={
                     <InputAdornment position='end'>
                         <IconButton disabled={(msgValue.trim().length == 0)} style={{ marginLeft: '3px', borderRadius: '10%' }} onClick={sendMessage} size="small">
                             <SendIcon />

@@ -60,6 +60,9 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-start',
 }));
 
+//Certain Stateless variables for arithmetic applications
+let statelessCurrentTab = 0;
+
 export default function CollabView() {
   const [whiteboardObject, setWhiteboardObject] = React.useState(null);
   const [commentBadgeValue, setCommentBadgeValue] = React.useState(0);
@@ -82,16 +85,17 @@ export default function CollabView() {
 
   const switchTab = (event, newValue) => {
     setCurrentTab(newValue);
+    statelessCurrentTab = newValue;
   }
 
   React.useEffect(() => {
     socket.on('cbv-comment', (m) => {
-      if (currentTab != 2) setCommentBadgeValue((val) => (val + 1))
+      if (statelessCurrentTab != 2) setCommentBadgeValue((val) => (val + 1))
     })
   }, [])
 
   React.useEffect(() => {
-    if (currentTab == 2) setCommentBadgeValue(0);
+    if (statelessCurrentTab == 2) setCommentBadgeValue(0);
   }, [currentTab]);
 
   return (
@@ -114,7 +118,7 @@ export default function CollabView() {
         </Toolbar>
       </AppBar>
       <Divider />
-      <Box sx={{ height: "calc(100% - 60px)", width: "100%", display: 'flex', flexDirection: 'row' }}>
+      <Box sx={{ height: "calc(100% - 64px)", width: "100%", display: 'flex', flexDirection: 'row' }}>
         <Main open={open}>
           <DrawingBoard uName={myName} roomName={'jvksvf'} socketIO={socket} sendWhiteboardObject={onGetWhiteboardObject}></DrawingBoard>
         </Main>
@@ -137,8 +141,8 @@ export default function CollabView() {
             </IconButton>
           </DrawerHeader>
           <Divider />
-          <Box sx={{ display: 'flex', height: '100%' }}>
-            <Box sx={{ flexGrow: 1, overflowY: 'auto', overflowX: 'hidden' }}>
+          <Box sx={{ display: 'flex', height: 'calc(100% - 64px)' }}>
+            <Box sx={{ flexGrow: 1, overflow: 'scroll' }}>
               <CollabViewPenSettings whiteboardObject={whiteboardObject} sx={{ display: (currentTab == 0 ? 'block' : 'none') }}></CollabViewPenSettings>
               <CollabViewActiveUsers socketIO={socket} uName={myName} sx={{ display: (currentTab == 1 ? 'block' : 'none') }}></CollabViewActiveUsers>
               <CollabViewComments roomName={'jvksvf'} socketIO={socket} uName={myName} sx={{ display: (currentTab == 2 ? 'flex' : 'none') }}></CollabViewComments>
