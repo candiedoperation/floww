@@ -9,6 +9,7 @@ import { InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
 import moment from 'moment';
 
 const CollabViewComments = (props) => {
+    const commentBottomRef = React.useRef();
     const [comments, setComments] = React.useState([]);
     const [msgValue, setMsgValue] = React.useState("");
 
@@ -18,11 +19,16 @@ const CollabViewComments = (props) => {
         })
     }, []);
 
+    React.useEffect(() => {
+        if (commentBottomRef.current) commentBottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }, [comments]);
+
     const sendMessage = () => {
         if (msgValue.trim().length > 0) {
             setComments((comments) => [...comments, {
                 uName: props.uName,
-                message: msgValue
+                message: msgValue,
+                time: moment().toISOString()
             }]);
 
             props.socketIO.emit('cbv-comment', {
@@ -39,7 +45,7 @@ const CollabViewComments = (props) => {
 
     return (
         <Box sx={{ ...props.sx, height: '100%', flexDirection: 'column' }}>
-            <Box sx={{ padding: '8px', flexGrow: 1, maxHeight: '100%', overflowY: 'scroll' }}>
+            <Box sx={{ padding: '8px', flexGrow: 1, maxHeight: '100%', overflowY: 'auto' }}>
                 {
                     comments.map((comment) => {
                         return (
@@ -49,12 +55,13 @@ const CollabViewComments = (props) => {
                                     <Typography variant="p">{comment.message}</Typography>
                                 </Paper>
                                 <Typography mt="3px" sx={{ alignSelf: 'end' }} variant="caption">
-                                    {moment.utc(comment.time).local().format("hh:mm A")}
+                                    {moment(comment.time).local().format("hh:mm A")}
                                 </Typography>
                             </Box>
                         )
                     })
                 }
+                <Box ref={commentBottomRef}></Box>
             </Box>
             <Box sx={{ margin: '8px', display: 'flex' }}>
                 <OutlinedInput placeholder='Message' variant="outlined" value={msgValue} onKeyDown={(k) => { if (k.key == 'Enter') sendMessage() }} onChange={(e) => { setMsgValue(e.target.value) }} endAdornment={

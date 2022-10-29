@@ -142,7 +142,7 @@ export default function CollabView() {
           </DrawerHeader>
           <Divider />
           <Box sx={{ display: 'flex', height: 'calc(100% - 64px)' }}>
-            <Box sx={{ flexGrow: 1, overflow: 'scroll' }}>
+            <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
               <CollabViewPenSettings whiteboardObject={whiteboardObject} sx={{ display: (currentTab == 0 ? 'block' : 'none') }}></CollabViewPenSettings>
               <CollabViewActiveUsers socketIO={socket} uName={myName} sx={{ display: (currentTab == 1 ? 'block' : 'none') }}></CollabViewActiveUsers>
               <CollabViewComments roomName={'jvksvf'} socketIO={socket} uName={myName} sx={{ display: (currentTab == 2 ? 'flex' : 'none') }}></CollabViewComments>
