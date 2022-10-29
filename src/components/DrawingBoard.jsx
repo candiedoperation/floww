@@ -11,6 +11,7 @@ let activeUsersBrushes = {};
 
 const DrawingBoard = (props) => {
     const socket = props.socketIO;
+    const wbOverlayDisableRef = React.useRef();
     const whiteboardRef = React.createRef(null);
     const wbWrapperRef = React.useRef(null);
     const [wbParentWidth, setWbParentWidth] = React.useState(1);
@@ -112,6 +113,16 @@ const DrawingBoard = (props) => {
             }
         }
 
+        socket.on("cbv-volatileStates", (states) => {
+            if (states.wbOverlayDisableRef) {
+                (
+                    states.wbOverlayDisableRef == true ?
+                    wbOverlayDisableRef.current.style['display'] = 'block' :
+                    wbOverlayDisableRef.current.style['display'] = 'none'
+                );
+            }
+        });
+
         socket.on("cbv-nibPosition", (nibData) => {
             activeUsersRefs[nibData.uId].current.style.marginLeft
                 = `${(((nibData.event.pointer.x) / nibData.scalingFactor) * whiteboard.getZoom())}px`;
@@ -131,6 +142,7 @@ const DrawingBoard = (props) => {
         })
 
         socket.on('cbv-nibPress', (nibData) => {
+            wbOverlayDisableRef.current.style['display'] = 'block';
             activeUsersBrushes[nibData.uId] = getFlowwBrushObject(nibData.nibId, whiteboard, true);
             activeUsersBrushes[nibData.uId].color = nibData.nibColor;
             activeUsersBrushes[nibData.uId].width = nibData.nibWidth;
@@ -145,6 +157,7 @@ const DrawingBoard = (props) => {
         });
 
         socket.on('cbv-nibLift', (nibData) => {
+            wbOverlayDisableRef.current.style['display'] = 'none';
             activeUsersBrushes[nibData.uId]
                 .onMouseUp(nibData.event);
         });
@@ -152,10 +165,10 @@ const DrawingBoard = (props) => {
         socket.on('cbv-createSelection', (e) => {
             let selection = new fabric.ActiveSelection([], { canvas: whiteboard });
             selection.aCoords = {
-                tl: {x: 100, y: 100},
-                tr: {x: 200, y: 100},
-                bl: {x: 100, y: 200},
-                br: {x: 200, y: 200}
+                tl: { x: 100, y: 100 },
+                tr: { x: 200, y: 100 },
+                bl: { x: 100, y: 200 },
+                br: { x: 200, y: 200 }
             }
             whiteboard.setActiveObject(selection);
         });
@@ -222,7 +235,7 @@ const DrawingBoard = (props) => {
     return (
         <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
             <Box ref={wbWrapperRef} sx={{ width: "100%", flexGrow: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Paper sx={{ borderRadius: "10px", overflow: "auto", width: `${wbParentWidth}px`, height: `${wbParentHeight}px` }} elevation={3}>
+                <Paper sx={{ position: "relative", borderRadius: "10px", overflow: "hidden", width: `${wbParentWidth}px`, height: `${wbParentHeight}px` }} elevation={3}>
                     <Box>
                         {
                             activeUsers.map((user) => {
@@ -242,7 +255,9 @@ const DrawingBoard = (props) => {
                             })
                         }
                     </Box>
+
                     <canvas style={{ borderRadius: "10px" }} width="100px" height="100px" ref={fabricRef} />
+                    <Box ref={wbOverlayDisableRef} sx={{ display: 'none', position: "absolute", top: '0px', left: '0px', width: '100%', height: '100%' }}></Box>
                 </Paper>
             </Box >
         </Box >
