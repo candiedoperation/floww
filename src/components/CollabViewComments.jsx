@@ -1,12 +1,11 @@
 import * as React from 'react';
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
 import SmsFailedIcon from '@mui/icons-material/SmsFailed';
 import SendIcon from "@mui/icons-material/Send";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import { InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
+import { InputAdornment, OutlinedInput } from '@mui/material';
 import moment from 'moment';
 
 const CollabViewComments = (props) => {
