@@ -41,7 +41,7 @@ const CollabViewConference = (props) => {
         }, []);
 
         return (
-            <Paper sx={{ width: '100%', height: '214px', overflow: 'hidden', marginBottom: '8px' }} variant='outlined'>
+            <Paper sx={{ width: '100%', height: '165px', overflow: 'hidden', marginBottom: '8px' }} variant='outlined'>
                 <video
                     ref={internalVideoRef}
                     autoPlay={true}
