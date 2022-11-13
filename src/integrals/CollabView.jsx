@@ -15,10 +15,12 @@ import DrawingBoard from '../components/DrawingBoard';
 import GestureIcon from '@mui/icons-material/Gesture';
 import PeopleIcon from '@mui/icons-material/People';
 import ChatIcon from '@mui/icons-material/Chat';
+import VideoChatIcon from '@mui/icons-material/VideoChat';
 import CollabViewComments from '../components/CollabViewComments';
 import CollabViewPenSettings from '../components/CollabViewPenSettings';
 import CollabViewActiveUsers from '../components/CollabViewActiveUsers';
 import PollIcon from '@mui/icons-material/Poll';
+import CollabViewConference from '../components/CollabViewConference';
 
 const drawerWidth = 320;
 const myName = Math.random();
@@ -145,7 +147,8 @@ export default function CollabView() {
             <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
               <CollabViewPenSettings whiteboardObject={whiteboardObject} sx={{ display: (currentTab == 0 ? 'block' : 'none') }}></CollabViewPenSettings>
               <CollabViewActiveUsers socketIO={socket} uName={myName} sx={{ display: (currentTab == 1 ? 'block' : 'none') }}></CollabViewActiveUsers>
-              <CollabViewComments roomName={'jvksvf'} socketIO={socket} uName={myName} sx={{ display: (currentTab == 2 ? 'flex' : 'none') }}></CollabViewComments>
+              <CollabViewConference roomName={'jvksvf'} socketIO={socket} uName={myName} sx={{ display: (currentTab == 2 ? 'flex' : 'none') }}></CollabViewConference>
+              <CollabViewComments roomName={'jvksvf'} socketIO={socket} uName={myName} sx={{ display: (currentTab == 3 ? 'flex' : 'none') }}></CollabViewComments>
             </Box>
             <Divider orientation='vertical' />
             <Box>
@@ -159,6 +162,7 @@ export default function CollabView() {
               >
                 <Tab icon={<GestureIcon />} aria-label="Pen Color" />
                 <Tab icon={<PeopleIcon />} aria-label="Participants" />
+                <Tab icon={<VideoChatIcon />} aria-label="Virtual Classroom" />
                 <Tab icon={<Badge badgeContent={commentBadgeValue} color="primary"><ChatIcon /></Badge>} aria-label="Messages" />
                 <Tab icon={<PollIcon />} aria-label="Poll" />
               </Tabs>
