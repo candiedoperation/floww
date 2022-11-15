@@ -21,7 +21,7 @@ const CollabViewConference = (props) => {
         props.socketIO.emit("cbv-vcRouterRtpCapabilities", {
             roomName: props.roomName,
             callback: (routerRtpCapabilities) => {
-                resolve (routerRtpCapabilities)
+                
             }
         })
     }

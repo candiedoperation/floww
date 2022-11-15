@@ -27,7 +27,7 @@ const myName = Math.random();
 const socket = io("http://192.168.29.229:3001");
 
 socket.on('connect', () => {
-  socket.emit('cbv-newActiveUser', {
+  socket.emit('cbv-joinRoom', {
     uId: socket.id,
     uName: myName,
     roomName: 'jvksvf'

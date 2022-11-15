@@ -1,9 +1,9 @@
-import CollabView from "./integrals/CollabView";
+import CollabViewEntry from "./integrals/CollabViewEntry";
 
 
 function App() {
   return (
-    <CollabView></CollabView>
+    <CollabViewEntry></CollabViewEntry>
   );
 }
 
