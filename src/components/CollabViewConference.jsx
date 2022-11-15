@@ -8,7 +8,7 @@ import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import SettingsIcon from '@mui/icons-material/Settings';
-import * as virtClassroom from "mediasoup-client";
+import * as mediasoup from "mediasoup-client";
 
 const CollabViewConference = (props) => {
     const [AVStreams, SetAVStreams] = React.useState([]);
@@ -17,9 +17,15 @@ const CollabViewConference = (props) => {
     const [compatibilityErr, setCompatibilityErr] = React.useState(false);
 
     //Initialize SFU Server Connection...
-    const virtClassroomDevice = new virtClassroom.Device();
-    virtClassroomDevice.load();
-
+    const initializeMediasoupDevice = () => {
+        props.socketIO.emit("cbv-vcRouterRtpCapabilities", {
+            roomName: props.roomName,
+            callback: (routerRtpCapabilities) => {
+                resolve (routerRtpCapabilities)
+            }
+        })
+    }
+    
     const getMediaStream = (stream) => {
         SetAVStreams((AVStreams) => [...AVStreams, {
             videoFeed: stream
