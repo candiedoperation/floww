@@ -1,4 +1,7 @@
+import { io } from 'socket.io-client';
 import { Divider, Typography } from '@mui/material';
+import { Routes, Route, Navigate } from "react-router-dom";
+import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper'
@@ -7,17 +10,23 @@ import Tab from '@mui/material/Tab';
 import AddIcon from '@mui/icons-material/Add';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button'
+import LoadingButton from '@mui/lab/LoadingButton';
 import * as React from 'react';
+import CollabView from './CollabView';
 
 const CollabViewEntry = () => {
+    const socket = io("http://192.168.29.229:3001");
     const [currentTab, setCurrentTab] = React.useState(0);
+    const [joinName, setJoinName] = React.useState("");
+    const [roomID, setRoomID] = React.useState("");
+    const [isConnecting, setIsConnecting] = React.useState(false);
+    const [connectStatus, setConnectStatus] = React.useState(false);
 
     const CreateRoomPanel = (internal_props) => {
         return (
             <Box sx={{ ...internal_props.sx, alignItems: 'center', justifyContent: 'center', flexDirection: 'column', height: '100%', minHeight: '200px'}}>
                 <TextField sx={{ width: '50%' }} label="Name" variant="outlined" />
-                <Button startIcon={<AddIcon />} sx={{ marginTop: '15px' }} variant="contained">Create and Join Room</Button>
+                <LoadingButton loading={isConnecting} startIcon={<AddIcon />} sx={{ marginTop: '15px' }} variant="contained">Create and Join Room</LoadingButton>
             </Box>
         )
     }
@@ -27,17 +36,17 @@ const CollabViewEntry = () => {
             <Box sx={{ ...internal_props.sx, alignItems: 'center', justifyContent: 'center', flexDirection: 'column', height: '100%', minHeight: '200px'}}>
                 <TextField sx={{ width: '50%', marginBottom: '10px' }} label="Room ID" variant="outlined" />
                 <TextField sx={{ width: '50%' }} label="Name" variant="outlined" />
-                <Button startIcon={<MeetingRoomIcon />} sx={{ marginTop: '15px' }} variant="contained">Join Room</Button>
+                <LoadingButton loading={isConnecting} startIcon={<MeetingRoomIcon />} sx={{ marginTop: '15px' }} variant="contained">Join Room</LoadingButton>
             </Box>
         )
     }
 
-    return (
-        <Box sx={{ height: '100vh', maxHeight: '100vh' }}>
+    const VCFramework = (internal_props) => {
+        return (<Box sx={{ height: '100vh', maxHeight: '100vh' }}>
             <Grid container sx={{ height: '100%', width: '100%' }}>
                 <Grid item xs={3}>
                     <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                        <img src='favicon512.png' style={{ borderRadius: '15%', aspectRatio: '1 / 1', width: '15%' }} />
+                        <img src='/favicon512.png' style={{ borderRadius: '15%', aspectRatio: '1 / 1', width: '15%' }} />
                         <Typography sx={{ marginTop: '10px' }} variant='h4'>Floww</Typography>
                         <Typography variant='p'>Virtual Classroom</Typography>
                     </Box>
@@ -64,7 +73,22 @@ const CollabViewEntry = () => {
                     </Box>
                 </Grid>
             </Grid>
-        </Box>
+        </Box>)
+    }
+
+    const AuthCollabViewElement = (internal_props) => {
+        return (
+            (connectStatus === true) ?
+            <CollabView socketIO={socket} myName={joinName} roomName={roomID} /> :
+            <Navigate to="/classroom/" replace={true} />
+        )
+    }
+
+    return (
+        <Routes>
+            <Route path="/" exact element={<VCFramework />}></Route>
+            <Route path="/:roomID/*" exact element={<AuthCollabViewElement />}></Route>
+        </Routes>
     )
 }
 

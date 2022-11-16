@@ -1,9 +1,12 @@
 import CollabViewEntry from "./integrals/CollabViewEntry";
+import { Routes, Route } from "react-router-dom";
 
 
 function App() {
   return (
-    <CollabViewEntry></CollabViewEntry>
+    <Routes>
+      <Route path="/classroom/*" element={<CollabViewEntry />} exact></Route>
+    </Routes>
   );
 }
 

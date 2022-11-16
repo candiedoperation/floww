@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { io } from 'socket.io-client';
 import { styled } from '@mui/material/styles';
 import { Badge, Tab, Tabs } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -23,17 +22,6 @@ import PollIcon from '@mui/icons-material/Poll';
 import CollabViewConference from '../components/CollabViewConference';
 
 const drawerWidth = 320;
-const myName = Math.random();
-const socket = io("http://192.168.29.229:3001");
-
-socket.on('connect', () => {
-  socket.emit('cbv-joinRoom', {
-    uId: socket.id,
-    uName: myName,
-    roomName: 'jvksvf'
-  });
-});
-
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     flexGrow: 1,
@@ -65,7 +53,9 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 //Certain Stateless variables for arithmetic applications
 let statelessCurrentTab = 0;
 
-export default function CollabView() {
+export default function CollabView(props) {
+  const socket = props.socketIO;
+  const myName = props.myName;
   const [whiteboardObject, setWhiteboardObject] = React.useState(null);
   const [commentBadgeValue, setCommentBadgeValue] = React.useState(0);
   const [currentTab, setCurrentTab] = React.useState(0);
@@ -91,6 +81,14 @@ export default function CollabView() {
   }
 
   React.useEffect(() => {
+    socket.on('connect', () => {
+      socket.emit('cbv-joinRoom', {
+        uId: socket.id,
+        uName: myName,
+        roomName: 'jvksvf'
+      });
+    });
+
     socket.on('cbv-comment', (m) => {
       if (statelessCurrentTab != 2) setCommentBadgeValue((val) => (val + 1))
     })
