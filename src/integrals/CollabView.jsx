@@ -82,11 +82,11 @@ export default function CollabView(props) {
 
   React.useEffect(() => {
     socket.on('connect', () => {
-      socket.emit('cbv-joinRoom', {
+      /*socket.emit('cbv-joinRoom', {
         uId: socket.id,
         uName: myName,
         roomName: 'jvksvf'
-      });
+      });*/
     });
 
     socket.on('cbv-comment', (m) => {
