@@ -243,8 +243,8 @@ const DrawingBoard = (props) => {
                                 activeUsersBrushes[user.uId] = new fabric.PencilBrush();
                                 return (
                                     <Chip
-                                        avatar={<Avatar>A</Avatar>}
-                                        label={user.uName.toString().slice(2, 5)}
+                                        avatar={<Avatar>{user.uName.toString().slice(0, 1)}</Avatar>}
+                                        label={user.uName.toString()}
                                         ref={activeUsersRefs[user.uId]}
                                         variant="outlined"
                                         style={{

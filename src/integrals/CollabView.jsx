@@ -20,6 +20,7 @@ import CollabViewPenSettings from '../components/CollabViewPenSettings';
 import CollabViewActiveUsers from '../components/CollabViewActiveUsers';
 import PollIcon from '@mui/icons-material/Poll';
 import CollabViewConference from '../components/CollabViewConference';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 const drawerWidth = 320;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -55,7 +56,6 @@ let statelessCurrentTab = 0;
 
 export default function CollabView(props) {
   const socket = props.socketIO;
-  const myName = props.myName;
   const [whiteboardObject, setWhiteboardObject] = React.useState(null);
   const [commentBadgeValue, setCommentBadgeValue] = React.useState(0);
   const [currentTab, setCurrentTab] = React.useState(0);
@@ -82,20 +82,20 @@ export default function CollabView(props) {
 
   React.useEffect(() => {
     socket.on('connect', () => {
-      /*socket.emit('cbv-joinRoom', {
+      socket.emit('cbv-joinRoom', {
+        uName: props.myName,
+        roomName: props.roomName,
         uId: socket.id,
-        uName: myName,
-        roomName: 'jvksvf'
-      });*/
-    });
+      })
+    })
 
     socket.on('cbv-comment', (m) => {
-      if (statelessCurrentTab != 2) setCommentBadgeValue((val) => (val + 1))
+      if (statelessCurrentTab != 3) setCommentBadgeValue((val) => (val + 1))
     })
   }, [])
 
   React.useEffect(() => {
-    if (statelessCurrentTab == 2) setCommentBadgeValue(0);
+    if (statelessCurrentTab == 3) setCommentBadgeValue(0);
   }, [currentTab]);
 
   return (
@@ -104,7 +104,7 @@ export default function CollabView(props) {
         <Toolbar>
           <Box sx={{ flexGrow: 1 }}>
             <Typography variant="h6" component="div" sx={{ lineHeight: 'initial' }}>Floww</Typography>
-            <Typography variant="caption" component="div" sx={{ lineHeight: 'initial' }}>Room: jvksvf</Typography>
+            <Typography variant="caption" component="div" sx={{ lineHeight: 'initial' }}>Room: {props.roomName}</Typography>
           </Box>
           <IconButton
             color="inherit"
@@ -120,7 +120,7 @@ export default function CollabView(props) {
       <Divider />
       <Box sx={{ height: "calc(100% - 64px)", width: "100%", display: 'flex', flexDirection: 'row' }}>
         <Main open={open}>
-          <DrawingBoard uName={myName} roomName={'jvksvf'} socketIO={socket} sendWhiteboardObject={onGetWhiteboardObject}></DrawingBoard>
+          <DrawingBoard uName={props.myName} roomName={props.roomName} socketIO={socket} sendWhiteboardObject={onGetWhiteboardObject}></DrawingBoard>
         </Main>
         <Drawer
           sx={{
@@ -144,9 +144,9 @@ export default function CollabView(props) {
           <Box sx={{ display: 'flex', height: 'calc(100% - 64px)' }}>
             <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
               <CollabViewPenSettings whiteboardObject={whiteboardObject} sx={{ display: (currentTab == 0 ? 'block' : 'none') }}></CollabViewPenSettings>
-              <CollabViewActiveUsers socketIO={socket} uName={myName} sx={{ display: (currentTab == 1 ? 'block' : 'none') }}></CollabViewActiveUsers>
-              <CollabViewConference roomName={'jvksvf'} socketIO={socket} uName={myName} sx={{ display: (currentTab == 2 ? 'flex' : 'none') }}></CollabViewConference>
-              <CollabViewComments roomName={'jvksvf'} socketIO={socket} uName={myName} sx={{ display: (currentTab == 3 ? 'flex' : 'none') }}></CollabViewComments>
+              <CollabViewActiveUsers socketIO={socket} uName={props.myName} sx={{ display: (currentTab == 1 ? 'block' : 'none') }}></CollabViewActiveUsers>
+              <CollabViewConference roomName={props.roomName} socketIO={socket} uName={props.myName} sx={{ display: (currentTab == 2 ? 'flex' : 'none') }}></CollabViewConference>
+              <CollabViewComments roomName={props.roomName} socketIO={socket} uName={props.myName} sx={{ display: (currentTab == 3 ? 'flex' : 'none') }}></CollabViewComments>
             </Box>
             <Divider orientation='vertical' />
             <Box>

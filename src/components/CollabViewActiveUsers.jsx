@@ -14,7 +14,7 @@ const CollabViewActiveUsers = (props) => {
     React.useState(() => {
         props.socketIO.on('cbv-cachedActiveUsersList', (uList) => {
             setActiveUsers((activeUsers) => [{
-                uName: 'You',
+                uName: `You (${props.uName})`,
                 uId: props.socketIO.id
             }, ...uList])
         })
