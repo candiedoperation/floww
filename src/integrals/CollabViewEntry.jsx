@@ -121,7 +121,11 @@ const CollabViewEntry = () => {
                                     <Tab icon={<AddIcon />} label="Create new Room" aria-label="Create new Room" />
                                     <Tab icon={<MeetingRoomIcon />} label="Join existing Room" aria-label="Join existing Room" />
                                 </Tabs>
-                                <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+                                <Box sx={{ display: { xs: 'flex', sm: 'flex', md: 'none' }, width: '100%', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+                                    <Typography sx={{ marginTop: '20px' }} variant='h4'>Floww</Typography>
+                                    <Typography variant='p'>Virtual Classroom</Typography>
+                                </Box>
+                                <Box sx={{ flexGrow: 1, overflow: 'auto', marginTop: '10px' }}>
                                     <CreateRoomPanel sx={{ display: (currentTab == 0 ? 'flex' : 'none') }}></CreateRoomPanel>
                                     <JoinRoomPanel sx={{ display: (currentTab == 1 ? 'flex' : 'none') }}></JoinRoomPanel>
                                 </Box>
