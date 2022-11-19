@@ -15,7 +15,6 @@ import * as React from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 const HomeLogin = (props) => {
-    const [currentTab, setCurrentTab] = React.useState(0);
     const [isConnecting, setIsConnecting] = React.useState(false);
     const [authStatus, setAuthStatus] = React.useState(0);
     const navigate = useNavigate();
@@ -73,6 +72,7 @@ const HomeLogin = (props) => {
     }
 
     const LoginPage = (internal_props) => {
+        const [currentTab, setCurrentTab] = React.useState(0);
         return (
             <Box sx={{ height: '100%', maxHeight: '100%' }}>
                 <Grid container sx={{ height: '100%', width: '100%' }}>
