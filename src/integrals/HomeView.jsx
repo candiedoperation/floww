@@ -16,12 +16,13 @@ import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Route, Routes, useParams } from 'react-router-dom';
-import HomeViewDashboard from './HomeViewDashboard';
+import { Navigate, Route, Routes, useParams } from 'react-router-dom';
+import HomeViewDashboard from '../components/HomeViewDashboard';
+import HomeViewDrawer from '../components/HomeViewDrawer';
 
 const drawerWidth = 240;
 
-function HomeView(props) {
+const HomeView = (props) => {
     const { window } = props;
     const linkProps = useParams();
     const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -29,22 +30,14 @@ function HomeView(props) {
 
     const pageName = () => {
         switch (linkProps["*"]) {
-            case 'home': return('Home');
-            default: return('Dashboard');
+            case 'home': return ('Home');
+            default: return ('Dashboard');
         }
     }
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
-
-    const drawer = () => {
-        return (
-            <Box>
-                {"drawer123"}
-            </Box>
-        )
-    }
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -76,7 +69,6 @@ function HomeView(props) {
             <Box
                 component="nav"
                 sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-                aria-label="mailbox folders"
             >
                 <Drawer
                     container={container}
@@ -91,7 +83,7 @@ function HomeView(props) {
                         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
                     }}
                 >
-                    {drawer}
+                    {<HomeViewDrawer />}
                 </Drawer>
                 <Drawer
                     variant="permanent"
@@ -101,7 +93,7 @@ function HomeView(props) {
                     }}
                     open
                 >
-                    {drawer}
+                    {<HomeViewDrawer />}
                 </Drawer>
             </Box>
             <Box
@@ -110,7 +102,8 @@ function HomeView(props) {
             >
                 <Toolbar />
                 <Routes>
-                    <Route path="/home/*" element={<HomeViewDashboard />} />
+                    <Route path="/" element={<Navigate to="./home" />} />
+                    <Route path="/home/*" element={<HomeViewDashboard userData={props.userData} />} />
                 </Routes>
             </Box>
         </Box>
