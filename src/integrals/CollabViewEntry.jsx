@@ -16,7 +16,7 @@ import * as React from 'react';
 import CollabView from './CollabView';
 
 const CollabViewEntry = () => {
-    const socket = io("http://192.168.29.229:3001", { path: '/cbv-socket' });
+    const socket = io("https://192.168.29.229:5001", { path: '/cbv-socket' });
     const [isConnecting, setIsConnecting] = React.useState(false);
     const [connectStatus, setConnectStatus] = React.useState(false);
     const [alertOpen, setAlertOpen] = React.useState(false);

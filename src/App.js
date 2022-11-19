@@ -12,10 +12,14 @@ const CheckAuth = (props) => {
 
     React.useEffect(() => {
       axios
-        .post(`${serverURL}/api/verifyauth`)
+        .post(`${serverURL}/api/verifyauth`, 
+          undefined, 
+          { withCredentials: true }
+        )
         .then((res) => {
-          const flowwResponse = res.response.data;
-          (flowwResponse.status === true) ? setAuthenticated(2) : setAuthenticated(1);
+          setTimeout(() => {
+            setAuthenticated(2)
+          }, 700);
         })
         .catch((res) => {
           setTimeout(() => {
@@ -45,7 +49,7 @@ const App = () => {
     <Routes>
       <Route path="/" element={<HomeLogin />} exact></Route>
       <Route path="/login" element={<HomeLogin />} exact></Route>
-      <Route path="/dashboard/*" element={<CheckAuth><HomeView /></CheckAuth>} exact></Route>
+      <Route path="/dashboard/*" element={<CheckAuth><HomeView /></CheckAuth>}></Route>
       <Route path="/classroom/*" element={<CollabViewEntry />} exact></Route>
     </Routes>
   );
