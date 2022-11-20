@@ -62,7 +62,7 @@ const HomeLogin = (props) => {
             <Box sx={{ ...internal_props.sx, alignItems: 'center', justifyContent: 'center', flexDirection: 'column', height: '100%', minHeight: '200px' }}>
                 <TextField type="email" disabled={isConnecting} value={usernameText} onChange={(e) => { setUsernameText(e.target.value) }} sx={{ marginBottom: '10px', width: { xs: '80%', sm: '80%', md: '50%', lg: '50%' } }} label="Email" variant="outlined" />
                 <TextField type="password" disabled={isConnecting} value={passwordText} onChange={(e) => { setPasswordText(e.target.value) }} sx={{ width: { xs: '80%', sm: '80%', md: '50%', lg: '50%' } }} label="Password" variant="outlined" />
-                <LoadingButton disabled={(usernameText.trim().length == 0)} onClick={initiateSignIn} loading={isConnecting} startIcon={<LoginIcon />} sx={{ marginTop: '15px' }} variant="contained">Login</LoadingButton>
+                <LoadingButton disabled={(usernameText.trim().length === 0 || passwordText.trim().length === 0)} onClick={initiateSignIn} loading={isConnecting} startIcon={<LoginIcon />} sx={{ marginTop: '15px' }} variant="contained">Login</LoadingButton>
             </Box>
         )
     }
