@@ -78,7 +78,7 @@ const HomeView = (props) => {
             setBackdrop(true);
             axios
                 .post(
-                    `${serverURL}/api/logout`,
+                    `${serverURL}/api/auth/logout`,
                     undefined,
                     { withCredentials: true }
                 )

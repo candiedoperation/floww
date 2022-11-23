@@ -28,7 +28,7 @@ const CheckAuth = (props) => {
 
   React.useEffect(() => {
     axios
-      .post(`${serverURL}/api/verifyauth`,
+      .post(`${serverURL}/api/auth/verify`,
         undefined,
         { withCredentials: true }
       )
