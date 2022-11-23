@@ -37,7 +37,7 @@ const HomeLogin = (props) => {
 
     React.useState(() => {
         axios
-            .post(`${serverURL}/api/verifyauth`,
+            .post(`${serverURL}/api/auth/verify`,
                 undefined,
                 { withCredentials: true }
             )
@@ -58,7 +58,7 @@ const HomeLogin = (props) => {
         const initiateSignIn = () => {
             setIsConnecting(true);
             axios
-                .post(`${serverURL}/api/login`, {
+                .post(`${serverURL}/api/auth/login`, {
                     email: usernameText,
                     password: passwordText
                 }, { withCredentials: true })
