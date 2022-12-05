@@ -35,7 +35,7 @@ import { MD5 } from 'crypto-js';
 import { serverURL } from '../middleware/FlowwServerParamConn';
 
 const drawerWidth = 240;
-const HomeView = (props) => {
+const FlowwDashboard = (props) => {
     const { window } = props;
     const linkProps = useParams();
     const pageLocation = useLocation();
@@ -199,4 +199,4 @@ const HomeView = (props) => {
     );
 }
 
-export default HomeView;
+export default FlowwDashboard;
