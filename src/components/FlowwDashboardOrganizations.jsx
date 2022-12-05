@@ -17,15 +17,42 @@
 */
 
 import AddIcon from '@mui/icons-material/Add';
-import { Box, Button, Divider, List, ListItemButton, ListSubheader, Typography } from '@mui/material';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import WarningIcon from '@mui/icons-material/Warning';
+import { Box, Button, Collapse, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Typography } from '@mui/material';
+import axios from 'axios';
+import { serverURL } from '../middleware/FlowwServerParamConn';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 const FlowwDashboardOrganizations = (props) => {
     const [organizations, setOrganizations] = React.useState([]);
+    const [collapseOpen, setCollapseOpen] = React.useState(0);
+
+    React.useEffect(() => {
+        axios
+            .get(`${serverURL}/api/user/memberoforg`,
+                { withCredentials: true }
+            )
+            .then((res) => {
+                setOrganizations((organizations) => res.data);
+            })
+            .catch((res) => {
+                //Alert
+            })
+    }, []);
+
+    const handleCollapse = (trigger) => {
+        if (trigger == collapseOpen) {
+            setCollapseOpen(0);
+        } else {
+            setCollapseOpen(trigger);
+        }
+    }
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', maxHeight: '100%' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', maxHeight: '100%', width: '100%' }}>
             <Box>
                 <Box sx={{ display: 'flex' }}>
                     <Button variant="contained" startIcon={<AddIcon />}>Create Organization</Button>
@@ -38,7 +65,26 @@ const FlowwDashboardOrganizations = (props) => {
                         <Typography variant="h5">No Organizations. Create one, or ask someone to add you.</Typography> :
                         organizations.map((organization) => {
                             return (
-                                <ListItemButton>jk</ListItemButton>
+                                <>
+                                    <ListItemButton onClick={() => { handleCollapse(organization.name); }}>
+                                        <ListItemText primary={organization.name} secondary={organization.contact.email} />
+                                        {(collapseOpen === organization.name) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                    </ListItemButton>
+                                    <Collapse in={(collapseOpen === organization.name) ? true : false} unmountOnExit>
+                                        {
+                                            (!organization.subOrganizations.length > 0) ?
+                                            <ListItem>
+                                                <ListItemIcon><WarningIcon /></ListItemIcon>
+                                                <ListItemText primary="Sub-Organizations aren't a part of this organization" secondary="They represent a school in a school district" />
+                                            </ListItem> :
+                                            organization.subOrganizations.map((subOrganization) => {
+                                                return (
+                                                    <h1>1</h1>
+                                                )
+                                            })
+                                        }
+                                    </Collapse>
+                                </>
                             )
                         })
                 }

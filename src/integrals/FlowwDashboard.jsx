@@ -110,7 +110,6 @@ const FlowwDashboard = (props) => {
                     <Avatar sx={{ width: '40px', height: '40px' }} src={userAvatar}>{props.userData.name.charAt(0)}</Avatar>
                 </IconButton>
                 <Menu
-                    id="basic-menu"
                     anchorEl={anchorEl}
                     open={open}
                     onClose={handleClose}
@@ -190,7 +189,7 @@ const FlowwDashboard = (props) => {
             </Box>
             <Box
                 component="main"
-                sx={{ maxHeight: 'calc(100vh - 64px)', overflow: 'hidden', p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+                sx={{ width: '100%', maxHeight: 'calc(100vh - 64px)', overflow: 'hidden', p: 3 }}
             >
                 <Toolbar />
                 <Routes>

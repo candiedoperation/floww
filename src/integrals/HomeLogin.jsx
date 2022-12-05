@@ -37,7 +37,7 @@ const HomeLogin = (props) => {
     const [authStatus, setAuthStatus] = React.useState(0);
     const navigate = useNavigate();
 
-    React.useState(() => {
+    React.useEffect(() => {
         axios
             .post(`${serverURL}/api/auth/verify`,
                 undefined,
