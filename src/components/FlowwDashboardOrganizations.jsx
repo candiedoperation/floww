@@ -17,10 +17,11 @@
 */
 
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import WarningIcon from '@mui/icons-material/Warning';
-import { Box, Button, Collapse, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Typography } from '@mui/material';
+import { Box, Button, Collapse, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Typography } from '@mui/material';
 import axios from 'axios';
 import { serverURL } from '../middleware/FlowwServerParamConn';
 import * as React from 'react';
@@ -67,10 +68,11 @@ const FlowwDashboardOrganizations = (props) => {
                             return (
                                 <>
                                     <ListItemButton onClick={() => { handleCollapse(organization.name); }}>
-                                        <ListItemText primary={organization.name} secondary={organization.contact.email} />
                                         {(collapseOpen === organization.name) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                        <ListItemText sx={{ marginLeft: '10px' }} primary={organization.name} secondary={organization.contact.email} />
+                                        {(organization.administrators.indexOf(props.userData.id) > -1) ? <IconButton><EditIcon /></IconButton> : <></>}
                                     </ListItemButton>
-                                    <Collapse in={(collapseOpen === organization.name) ? true : false} unmountOnExit>
+                                    <Collapse sx={{ marginLeft: '35px' }} in={(collapseOpen === organization.name) ? true : false} unmountOnExit>
                                         {
                                             (!organization.subOrganizations.length > 0) ?
                                             <ListItem>
