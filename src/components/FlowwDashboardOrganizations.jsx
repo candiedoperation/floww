@@ -16,25 +16,33 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { Box, Divider, List, ListSubheader, Typography } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import { Box, Button, Divider, List, ListItemButton, ListSubheader, Typography } from '@mui/material';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 const FlowwDashboardOrganizations = (props) => {
-    const [organizations, setOrganizations] = React.useState([]);
+    const [organizations, setOrganizations] = React.useState([
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 22, 2, 2, 1, 1, 1, 2, 2, 3, 2, 2, 2, 2, 2
+    ]);
 
     return (
-        <Box>
-            <List>
-                <ListSubheader sx={{ fontSize: 32, padding: '0px' }}>You're a part of...</ListSubheader>
+        <Box sx={{ display: 'flex', flexDirection: 'column', maxHeight: '100%' }}>
+            <Box>
+                <Box sx={{ display: 'flex' }}>
+                    <Button variant="contained" startIcon={<AddIcon />}>Create Organization</Button>
+                </Box>
+                <Typography variant='h4' sx={{ fontWeight: 'medium', color: 'text.secondary', paddingTop: '15px' }}>You're a part of...</Typography>
+            </Box>
+            <List sx={{ overflow: 'scroll', flexGrow: 1 }}>
                 {
                     (!organizations.length > 0) ?
-                    <Typography variant="h5">No Organizations. Create one, or ask someone to add you.</Typography> : 
-                    organizations.map((organization) => {
-                        return (
-                            <h1>jk</h1>
-                        )
-                    })
+                        <Typography variant="h5">No Organizations. Create one, or ask someone to add you.</Typography> :
+                        organizations.map((organization) => {
+                            return (
+                                <ListItemButton>jk</ListItemButton>
+                            )
+                        })
                 }
             </List>
         </Box>
