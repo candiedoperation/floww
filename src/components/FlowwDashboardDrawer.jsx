@@ -49,7 +49,7 @@ const HomeViewDrawer = (props) => {
                 drawerLinks.map((drawerLink) => {
                     return (
                         <ListItem disablePadding>
-                            <ListItemButton onClick={() => { navigate(drawerLink.path); }} selected={(props.currentPage === drawerLink.linkName)}>
+                            <ListItemButton onClick={() => { navigate(drawerLink.path); if (props.onClose) props.onClose(); }} selected={(props.currentPage === drawerLink.linkName)}>
                                 <ListItemIcon>
                                     {drawerLink.icon}
                                 </ListItemIcon>

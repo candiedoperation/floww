@@ -11,7 +11,7 @@
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-    
+
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
@@ -35,6 +35,7 @@ import { Avatar, Divider } from '@mui/material';
 import axios from 'axios';
 import { MD5 } from 'crypto-js';
 import { serverURL } from '../middleware/FlowwServerParamConn';
+import FlowwDashboardOrganizations from '../components/FlowwDashboardOrganizations';
 
 const drawerWidth = 240;
 const FlowwDashboard = (props) => {
@@ -174,7 +175,7 @@ const FlowwDashboard = (props) => {
                         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
                     }}
                 >
-                    {<FlowwDashboardDrawer currentPage={currentPage} />}
+                    {<FlowwDashboardDrawer onClose={handleDrawerToggle} currentPage={currentPage} />}
                 </Drawer>
                 <Drawer
                     variant="permanent"
@@ -195,6 +196,7 @@ const FlowwDashboard = (props) => {
                 <Routes>
                     <Route path="/" element={<Navigate to="./home" />} />
                     <Route path="/home/*" element={<FlowwDashboardHome userData={props.userData} />} />
+                    <Route path="/organizations/*" element={<FlowwDashboardOrganizations userData={props.userData} />} />
                 </Routes>
             </Box>
         </Box>
