@@ -18,7 +18,7 @@ import * as React from 'react';
 import axios from "axios";
 import CollabViewEntry from "./integrals/CollabViewEntry";
 import { Routes, Route, Navigate } from "react-router-dom";
-import HomeView from "./integrals/HomeView";
+import FlowwDashboard from "./integrals/FlowwDashboard";
 import HomeLogin from "./integrals/HomeLogin";
 import { serverURL } from "./middleware/FlowwServerParamConn";
 import { Box, LinearProgress, Typography } from '@mui/material';
@@ -71,7 +71,7 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Navigate to="/login" />} exact></Route>
       <Route path="/login" element={<HomeLogin />} exact></Route>
-      <Route path="/dashboard/*" element={<CheckAuth setAuthenticated={setAuthenticated} setUserData={setUserData}><HomeView userData={userData} /></CheckAuth>}></Route>
+      <Route path="/dashboard/*" element={<CheckAuth setAuthenticated={setAuthenticated} setUserData={setUserData}><FlowwDashboard userData={userData} /></CheckAuth>}></Route>
       <Route path="/classroom/*" element={<CollabViewEntry />} exact></Route>
     </Routes>
   );

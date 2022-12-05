@@ -14,5 +14,5 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const serverURL = "https://192.168.29.229:5001"
+const serverURL = "https://10.0.0.71:5001"
 export { serverURL };

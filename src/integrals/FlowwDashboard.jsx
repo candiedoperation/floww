@@ -23,8 +23,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
-import HomeViewDashboard from '../components/HomeViewDashboard';
-import HomeViewDrawer from '../components/HomeViewDrawer';
+import FlowwDashboardHome from '../components/FlowwDashboardHome';
+import FlowwDashboardDrawer from '../components/FlowwDashboardDrawer';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Menu from '@mui/material/Menu';
@@ -32,7 +32,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { Avatar, Divider } from '@mui/material';
 import axios from 'axios';
 import { MD5 } from 'crypto-js';
-import { serverURL } from './../middleware/FlowwServerParamConn';
+import { serverURL } from '../middleware/FlowwServerParamConn';
 
 const drawerWidth = 240;
 const HomeView = (props) => {
@@ -48,6 +48,7 @@ const HomeView = (props) => {
     React.useEffect(() => {
         switch (linkProps["*"].split("/")[0]) {
             case 'home': return setCurrentPage('Home');
+            case 'organizations': return setCurrentPage('Organizations');
             default: return setCurrentPage('Dashboard');
         }
     }, [pageLocation]);
@@ -171,7 +172,7 @@ const HomeView = (props) => {
                         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
                     }}
                 >
-                    {<HomeViewDrawer currentPage={currentPage} />}
+                    {<FlowwDashboardDrawer currentPage={currentPage} />}
                 </Drawer>
                 <Drawer
                     variant="permanent"
@@ -181,7 +182,7 @@ const HomeView = (props) => {
                     }}
                     open
                 >
-                    {<HomeViewDrawer currentPage={currentPage} />}
+                    {<FlowwDashboardDrawer currentPage={currentPage} />}
                 </Drawer>
             </Box>
             <Box
@@ -191,7 +192,7 @@ const HomeView = (props) => {
                 <Toolbar />
                 <Routes>
                     <Route path="/" element={<Navigate to="./home" />} />
-                    <Route path="/home/*" element={<HomeViewDashboard userData={props.userData} />} />
+                    <Route path="/home/*" element={<FlowwDashboardHome userData={props.userData} />} />
                 </Routes>
             </Box>
         </Box>

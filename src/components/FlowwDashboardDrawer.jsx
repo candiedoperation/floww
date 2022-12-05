@@ -22,7 +22,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import HomeIcon from '@mui/icons-material/Home';
-import DraftsIcon from '@mui/icons-material/Drafts';
+import BusinessIcon from '@mui/icons-material/Business';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const HomeViewDrawer = (props) => {
@@ -34,6 +34,10 @@ const HomeViewDrawer = (props) => {
             linkName: 'Home',
             path: './home',
             icon: <HomeIcon />
+        }, {
+            linkName: 'Organizations',
+            path: './organizations',
+            icon: <BusinessIcon />
         }])
     }, []);
 
