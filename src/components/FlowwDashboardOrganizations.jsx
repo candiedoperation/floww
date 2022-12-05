@@ -22,9 +22,7 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 const FlowwDashboardOrganizations = (props) => {
-    const [organizations, setOrganizations] = React.useState([
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 22, 2, 2, 1, 1, 1, 2, 2, 3, 2, 2, 2, 2, 2
-    ]);
+    const [organizations, setOrganizations] = React.useState([]);
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', maxHeight: '100%' }}>
