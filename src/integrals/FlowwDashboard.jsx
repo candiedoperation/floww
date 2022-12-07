@@ -134,9 +134,9 @@ const FlowwDashboard = (props) => {
                             {(getCurrentTheme() === 'light') ? "Dark Mode" : "Light Mode"}
                         </ListItemText>
                     </MenuItem>
-                    <MenuItem sx={{ ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={logoutAction}>
-                        <ListItemIcon>
-                            <LogoutIcon />
+                    <MenuItem sx={{ ":hover": { color: 'error.dark', backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={logoutAction}>
+                        <ListItemIcon sx={{ color: 'inherit' }}>
+                            <LogoutIcon sx={{ color: 'inherit' }} />
                         </ListItemIcon>
                         <ListItemText>
                             Logout
