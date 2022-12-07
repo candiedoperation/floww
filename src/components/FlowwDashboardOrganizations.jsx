@@ -30,6 +30,17 @@ import CheckIcon from '@mui/icons-material/Check';
 
 const OrganizationsEditModal = (props) => {
     const [orgEditStates, setOrgEditStates] = React.useState({});
+    const [accordionState, setAccordionState] = React.useState(0);
+    const [organization, setOrganization] = React.useState({});
+
+    React.useEffect(() => {
+        /* UPDATE STATES OF TEMPLATE TEXT FIELDS */
+        if (props.organization.contact != undefined) {
+            props.organization.contact.email.map((email, index) => {
+                updateOrgEditState(`orgEmail${index}`, email)
+            })
+        }
+    }, [props.organization]);
 
     const updateOrgEditState = (id, value) => {
         setOrgEditStates((orgEditStates) => ({
@@ -50,7 +61,7 @@ const OrganizationsEditModal = (props) => {
         <Dialog fullWidth open={props.open} onClose={props.onClose}>
             <DialogTitle>{props.organization.name}</DialogTitle>
             <DialogContent>
-                <Accordion>
+                <Accordion onChange={() => { (accordionState === 1) ? setAccordionState(0) : setAccordionState(1) }} expanded={(accordionState === 1)}>
                     <AccordionSummary sx={{ ".MuiAccordionSummary-content": { width: '90%' } }} expandIcon={<ExpandMoreIcon />}>
                         <Typography sx={{ width: '33%', flexShrink: 0 }}>Name</Typography>
                         <Typography sx={{ color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis' }}>{props.organization.name}</Typography>
@@ -59,24 +70,36 @@ const OrganizationsEditModal = (props) => {
                         <OutlinedInput
                             sx={{ width: '100%' }}
                             endAdornment={<IconButton disabled={(orgEditStates["orgName"]) ? false : true} onClick={() => { handleSubmit('orgName') }}><CheckIcon /></IconButton>}
-                            placeholder='Organization Name'
+                            placeholder='Update Organization Name'
                             value={orgEditStates["orgName"]}
                             onChange={(e) => { updateOrgEditState("orgName", e.target.value) }}>
                         </OutlinedInput>
                     </AccordionDetails>
                 </Accordion>
-                <Accordion>
+                <Accordion onChange={() => { (accordionState === 2) ? setAccordionState(0) : setAccordionState(2) }} expanded={(accordionState === 2)}>
                     <AccordionSummary sx={{ ".MuiAccordionSummary-content": { width: '90%' } }} expandIcon={<ExpandMoreIcon />}>
                         <Typography sx={{ width: '33%', flexShrink: 0 }}>Email</Typography>
                         <Typography sx={{ color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis' }}>{(props.organization.contact) ? props.organization.contact.email.join(" ") : "None"}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
+                        {(!props.organization.contact) ? <></> :
+                            props.organization.contact.email.map((email, index) => {
+                                return (
+                                    <OutlinedInput
+                                        sx={{ width: '100%', marginBottom: '10px' }}
+                                        endAdornment={<IconButton disabled={(orgEditStates[`orgEmail${index}`]) ? false : true} onClick={() => { handleSubmit(`orgEmail${index}`) }}><CheckIcon /></IconButton>}
+                                        placeholder='Edit Email Address'
+                                        value={orgEditStates[`orgEmail${index}`]}
+                                        onChange={(e) => { updateOrgEditState(`orgEmail${index}`, e.target.value) }}>
+                                    </OutlinedInput>
+                                )
+                            })}
                         <OutlinedInput
                             sx={{ width: '100%' }}
-                            endAdornment={<IconButton disabled={(orgEditStates["orgName"]) ? false : true} onClick={() => { handleSubmit('orgName') }}><CheckIcon /></IconButton>}
-                            placeholder='Organization Name'
-                            value={orgEditStates["orgName"]}
-                            onChange={(e) => { updateOrgEditState("orgName", e.target.value) }}>
+                            endAdornment={<IconButton disabled={(orgEditStates["orgEmailNew"]) ? false : true} onClick={() => { handleSubmit('orgEmailNew') }}><CheckIcon /></IconButton>}
+                            placeholder='Add an Email Address'
+                            value={orgEditStates["orgEmailNew"]}
+                            onChange={(e) => { updateOrgEditState("orgEmailNew", e.target.value) }}>
                         </OutlinedInput>
                     </AccordionDetails>
                 </Accordion>
