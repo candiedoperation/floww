@@ -39,6 +39,10 @@ const OrganizationsEditModal = (props) => {
             props.organization.contact.email.map((email, index) => {
                 updateOrgEditState(`orgEmail${index}`, email)
             })
+
+            props.organization.contact.tel.map((tel, index) => {
+                updateOrgEditState(`orgTel${index}`, tel)
+            })
         }
     }, [props.organization]);
 
@@ -103,6 +107,42 @@ const OrganizationsEditModal = (props) => {
                         </OutlinedInput>
                     </AccordionDetails>
                 </Accordion>
+                <Accordion onChange={() => { (accordionState === 3) ? setAccordionState(0) : setAccordionState(3) }} expanded={(accordionState === 3)}>
+                    <AccordionSummary sx={{ ".MuiAccordionSummary-content": { width: '90%' } }} expandIcon={<ExpandMoreIcon />}>
+                        <Typography sx={{ width: '33%', flexShrink: 0 }}>Phone</Typography>
+                        <Typography sx={{ color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis' }}>{(props.organization.contact) ? (props.organization.contact.tel.length > 0) ? props.organization.contact.tel.join(", ") : "None" : "None"}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        {(!props.organization.contact) ? <></> :
+                            props.organization.contact.tel.map((tel, index) => {
+                                return (
+                                    <OutlinedInput
+                                        sx={{ width: '100%', marginBottom: '10px' }}
+                                        endAdornment={<IconButton disabled={(orgEditStates[`orgTel${index}`]) ? false : true} onClick={() => { handleSubmit(`orgTel${index}`) }}><CheckIcon /></IconButton>}
+                                        placeholder='Edit Phone Number'
+                                        value={orgEditStates[`orgTel${index}`]}
+                                        onChange={(e) => { updateOrgEditState(`orgTel${index}`, e.target.value) }}>
+                                    </OutlinedInput>
+                                )
+                            })}
+                        <OutlinedInput
+                            sx={{ width: '100%' }}
+                            endAdornment={<IconButton disabled={(orgEditStates["orgTelNew"]) ? false : true} onClick={() => { handleSubmit('orgTelNew') }}><CheckIcon /></IconButton>}
+                            placeholder='Add a Phone Number'
+                            value={orgEditStates["orgTelNew"]}
+                            onChange={(e) => { updateOrgEditState("orgTelNew", e.target.value) }}>
+                        </OutlinedInput>
+                    </AccordionDetails>
+                </Accordion>
+                <Accordion onChange={() => { (accordionState === 4) ? setAccordionState(0) : setAccordionState(4) }} expanded={(accordionState === 4)}>
+                    <AccordionSummary sx={{ ".MuiAccordionSummary-content": { width: '90%' } }} expandIcon={<ExpandMoreIcon />}>
+                        <Typography sx={{ width: '33%', flexShrink: 0 }}>Admins</Typography>
+                        <Typography sx={{ color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis' }}>Click to View</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        
+                    </AccordionDetails>
+                </Accordion>
             </DialogContent>
             <DialogActions>
                 <Button onClick={props.onClose}>Close</Button>
@@ -157,7 +197,11 @@ const FlowwDashboardOrganizations = (props) => {
                                     <ListItemButton onClick={() => { handleCollapse(organization.name); }}>
                                         {(collapseOpen === organization.name) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                                         <ListItemText sx={{ marginLeft: '10px' }} primary={organization.name} secondary={organization.contact.email[0]} />
-                                        {(organization.administrators.indexOf(props.userData.id) > -1) ? <IconButton onClick={() => { setOrgEditModalChoice(organization); setOrgEditModalOpen(true); }}><EditIcon /></IconButton> : <></>}
+                                        {
+                                            (organization.administrators.find(({ _id }) => _id === props.userData.id)) ?
+                                            <IconButton onClick={() => { setOrgEditModalChoice(organization); setOrgEditModalOpen(true); }}><EditIcon /></IconButton> : 
+                                            <></>
+                                        }
                                     </ListItemButton>
                                     <Collapse sx={{ marginLeft: '35px' }} in={(collapseOpen === organization.name) ? true : false} unmountOnExit>
                                         {
