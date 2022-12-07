@@ -36,12 +36,12 @@ const OrganizationsEditModal = (props) => {
             ...orgEditStates,
             [id]: value
         }))
-    }    
+    }
 
     const handleSubmit = (target) => {
         switch (target) {
             case 'orgName': {
-                
+
             }
         }
     }
@@ -51,14 +51,14 @@ const OrganizationsEditModal = (props) => {
             <DialogTitle>{props.organization.name}</DialogTitle>
             <DialogContent>
                 <Accordion>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <AccordionSummary sx={{ ".MuiAccordionSummary-content": { width: '90%' } }} expandIcon={<ExpandMoreIcon />}>
                         <Typography sx={{ width: '33%', flexShrink: 0 }}>Name</Typography>
-                        <Typography sx={{ color: 'text.secondary' }}>{props.organization.name}</Typography>
+                        <Typography sx={{ color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis' }}>{props.organization.name}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <OutlinedInput
                             sx={{ width: '100%' }}
-                            endAdornment={<IconButton disabled={(orgEditStates["orgName"]) ? false : true} onClick={() => { handleSubmit('orgName') }}><CheckIcon /></IconButton>} 
+                            endAdornment={<IconButton disabled={(orgEditStates["orgName"]) ? false : true} onClick={() => { handleSubmit('orgName') }}><CheckIcon /></IconButton>}
                             placeholder='Organization Name'
                             value={orgEditStates["orgName"]}
                             onChange={(e) => { updateOrgEditState("orgName", e.target.value) }}>
@@ -66,14 +66,14 @@ const OrganizationsEditModal = (props) => {
                     </AccordionDetails>
                 </Accordion>
                 <Accordion>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography sx={{ width: '33%', flexShrink: 0 }}>Name</Typography>
-                        <Typography sx={{ color: 'text.secondary' }}>{props.organization.name}</Typography>
+                    <AccordionSummary sx={{ ".MuiAccordionSummary-content": { width: '90%' } }} expandIcon={<ExpandMoreIcon />}>
+                        <Typography sx={{ width: '33%', flexShrink: 0 }}>Email</Typography>
+                        <Typography sx={{ color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis' }}>{(props.organization.contact) ? props.organization.contact.email.join(" ") : "None"}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <OutlinedInput
                             sx={{ width: '100%' }}
-                            endAdornment={<IconButton disabled={(orgEditStates["orgName"]) ? false : true} onClick={() => { handleSubmit('orgName') }}><CheckIcon /></IconButton>} 
+                            endAdornment={<IconButton disabled={(orgEditStates["orgName"]) ? false : true} onClick={() => { handleSubmit('orgName') }}><CheckIcon /></IconButton>}
                             placeholder='Organization Name'
                             value={orgEditStates["orgName"]}
                             onChange={(e) => { updateOrgEditState("orgName", e.target.value) }}>
@@ -133,7 +133,7 @@ const FlowwDashboardOrganizations = (props) => {
                                 <>
                                     <ListItemButton onClick={() => { handleCollapse(organization.name); }}>
                                         {(collapseOpen === organization.name) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                                        <ListItemText sx={{ marginLeft: '10px' }} primary={organization.name} secondary={organization.contact.email} />
+                                        <ListItemText sx={{ marginLeft: '10px' }} primary={organization.name} secondary={organization.contact.email[0]} />
                                         {(organization.administrators.indexOf(props.userData.id) > -1) ? <IconButton onClick={() => { setOrgEditModalChoice(organization); setOrgEditModalOpen(true); }}><EditIcon /></IconButton> : <></>}
                                     </ListItemButton>
                                     <Collapse sx={{ marginLeft: '35px' }} in={(collapseOpen === organization.name) ? true : false} unmountOnExit>
