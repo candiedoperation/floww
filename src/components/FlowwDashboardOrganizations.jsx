@@ -21,15 +21,78 @@ import EditIcon from '@mui/icons-material/Edit';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import WarningIcon from '@mui/icons-material/Warning';
-import { Box, Button, Collapse, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, OutlinedInput, Typography } from '@mui/material';
 import axios from 'axios';
 import { serverURL } from '../middleware/FlowwServerParamConn';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
+import CheckIcon from '@mui/icons-material/Check';
+
+const OrganizationsEditModal = (props) => {
+    const [orgEditStates, setOrgEditStates] = React.useState({});
+
+    const updateOrgEditState = (id, value) => {
+        setOrgEditStates((orgEditStates) => ({
+            ...orgEditStates,
+            [id]: value
+        }))
+    }    
+
+    const handleSubmit = (target) => {
+        switch (target) {
+            case 'orgName': {
+                
+            }
+        }
+    }
+
+    return (
+        <Dialog fullWidth open={props.open} onClose={props.onClose}>
+            <DialogTitle>{props.organization.name}</DialogTitle>
+            <DialogContent>
+                <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <Typography sx={{ width: '33%', flexShrink: 0 }}>Name</Typography>
+                        <Typography sx={{ color: 'text.secondary' }}>{props.organization.name}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <OutlinedInput
+                            sx={{ width: '100%' }}
+                            endAdornment={<IconButton disabled={(orgEditStates["orgName"]) ? false : true} onClick={() => { handleSubmit('orgName') }}><CheckIcon /></IconButton>} 
+                            placeholder='Organization Name'
+                            value={orgEditStates["orgName"]}
+                            onChange={(e) => { updateOrgEditState("orgName", e.target.value) }}>
+                        </OutlinedInput>
+                    </AccordionDetails>
+                </Accordion>
+                <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <Typography sx={{ width: '33%', flexShrink: 0 }}>Name</Typography>
+                        <Typography sx={{ color: 'text.secondary' }}>{props.organization.name}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <OutlinedInput
+                            sx={{ width: '100%' }}
+                            endAdornment={<IconButton disabled={(orgEditStates["orgName"]) ? false : true} onClick={() => { handleSubmit('orgName') }}><CheckIcon /></IconButton>} 
+                            placeholder='Organization Name'
+                            value={orgEditStates["orgName"]}
+                            onChange={(e) => { updateOrgEditState("orgName", e.target.value) }}>
+                        </OutlinedInput>
+                    </AccordionDetails>
+                </Accordion>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={props.onClose}>Close</Button>
+            </DialogActions>
+        </Dialog>
+    )
+}
 
 const FlowwDashboardOrganizations = (props) => {
     const [organizations, setOrganizations] = React.useState([]);
     const [collapseOpen, setCollapseOpen] = React.useState(0);
+    const [orgEditModalOpen, setOrgEditModalOpen] = React.useState(false);
+    const [orgEditModalChoice, setOrgEditModalChoice] = React.useState({});
 
     React.useEffect(() => {
         axios
@@ -54,6 +117,7 @@ const FlowwDashboardOrganizations = (props) => {
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', maxHeight: '100%', width: '100%' }}>
+            <OrganizationsEditModal organization={orgEditModalChoice} open={orgEditModalOpen} onClose={() => { setOrgEditModalOpen(false) }} />
             <Box>
                 <Box sx={{ display: 'flex' }}>
                     <Button variant="contained" startIcon={<AddIcon />}>Create Organization</Button>
@@ -70,20 +134,20 @@ const FlowwDashboardOrganizations = (props) => {
                                     <ListItemButton onClick={() => { handleCollapse(organization.name); }}>
                                         {(collapseOpen === organization.name) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                                         <ListItemText sx={{ marginLeft: '10px' }} primary={organization.name} secondary={organization.contact.email} />
-                                        {(organization.administrators.indexOf(props.userData.id) > -1) ? <IconButton><EditIcon /></IconButton> : <></>}
+                                        {(organization.administrators.indexOf(props.userData.id) > -1) ? <IconButton onClick={() => { setOrgEditModalChoice(organization); setOrgEditModalOpen(true); }}><EditIcon /></IconButton> : <></>}
                                     </ListItemButton>
                                     <Collapse sx={{ marginLeft: '35px' }} in={(collapseOpen === organization.name) ? true : false} unmountOnExit>
                                         {
                                             (!organization.subOrganizations.length > 0) ?
-                                            <ListItem>
-                                                <ListItemIcon><WarningIcon /></ListItemIcon>
-                                                <ListItemText primary="Sub-Organizations aren't a part of this organization" secondary="They represent a school in a school district" />
-                                            </ListItem> :
-                                            organization.subOrganizations.map((subOrganization) => {
-                                                return (
-                                                    <h1>1</h1>
-                                                )
-                                            })
+                                                <ListItem>
+                                                    <ListItemIcon><WarningIcon /></ListItemIcon>
+                                                    <ListItemText primary="Sub-Organizations aren't a part of this organization" secondary="They represent a school in a school district" />
+                                                </ListItem> :
+                                                organization.subOrganizations.map((subOrganization) => {
+                                                    return (
+                                                        <h1>1</h1>
+                                                    )
+                                                })
                                         }
                                     </Collapse>
                                 </>
