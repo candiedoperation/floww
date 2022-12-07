@@ -19,7 +19,7 @@
 import * as React from 'react';
 import axios from "axios";
 import CollabViewEntry from "./integrals/CollabViewEntry";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import FlowwDashboard from "./integrals/FlowwDashboard";
 import HomeLogin from "./integrals/HomeLogin";
 import { serverURL } from "./middleware/FlowwServerParamConn";
@@ -27,6 +27,7 @@ import { Box, LinearProgress, Typography } from '@mui/material';
 
 const CheckAuth = (props) => {
   const [authenticated, setAuthenticated] = React.useState(false);
+  const linkLocation = useLocation();
 
   React.useEffect(() => {
     axios
@@ -60,7 +61,7 @@ const CheckAuth = (props) => {
 
   switch (authenticated) {
     case 0: return (<LoadingPageElement />)
-    case 1: return (<Navigate to="/login" />)
+    case 1: return (<Navigate to={`/login?for=${linkLocation.pathname}`} />)
     case 2: return (props.children)
   }
 }

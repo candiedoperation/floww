@@ -30,12 +30,13 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import axios from "axios";
 import { serverURL } from "./../middleware/FlowwServerParamConn";
 import * as React from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const HomeLogin = (props) => {
     const [isConnecting, setIsConnecting] = React.useState(false);
     const [authStatus, setAuthStatus] = React.useState(0);
     const navigate = useNavigate();
+    const linkLocation = useLocation()
 
     React.useEffect(() => {
         axios
@@ -65,7 +66,9 @@ const HomeLogin = (props) => {
                     password: passwordText
                 }, { withCredentials: true })
                 .then((res) => {
-                    navigate("/dashboard");
+                    let forLink = new URLSearchParams(linkLocation.search).get('for');
+                    forLink = (forLink === null) ? "" : forLink;
+                    (forLink === "/" || forLink.trim() === "") ? navigate("/dashboard") : navigate(forLink);
                 })
                 .catch((res) => {
                     setTimeout(() => {
