@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { Divider, Typography } from '@mui/material';
+import { Divider, IconButton, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -31,6 +31,7 @@ import axios from "axios";
 import { serverURL } from "./../middleware/FlowwServerParamConn";
 import * as React from 'react';
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
+import BrightnessMediumIcon from '@mui/icons-material/BrightnessMedium';
 
 const HomeLogin = (props) => {
     const [isConnecting, setIsConnecting] = React.useState(false);
@@ -98,10 +99,17 @@ const HomeLogin = (props) => {
             <Box sx={{ height: '100%', maxHeight: '100%' }}>
                 <Grid container sx={{ height: '100%', width: '100%' }}>
                     <Grid item xs={0} sm={0} md={3} lg={3} xl={3} sx={{ display: { xs: 'none', sm: 'none', md: 'block', lg: 'block' } }}>
-                        <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                            <img src='/favicon512.png' style={{ borderRadius: '15%', aspectRatio: '1 / 1', width: '15%' }} />
-                            <Typography sx={{ marginTop: '10px' }} variant='h4'>Floww</Typography>
-                            <Typography variant='p'>Login</Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                            <Box sx={{ width: '100%', flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                <img src='/favicon512.png' style={{ borderRadius: '15%', aspectRatio: '1 / 1', width: '15%' }} />
+                                <Typography sx={{ marginTop: '10px' }} variant='h4'>Floww</Typography>
+                                <Typography variant='p'>Login</Typography>
+                            </Box>
+                            <Divider />
+                            <Box sx={{ padding: '8px', display: 'flex', alignItems: 'center' }}>
+                                <Typography sx={{ flexGrow: 1, marginLeft: '5px' }} variant='p'>© Floww Authors</Typography>
+                                <IconButton onClick={props.toggleTheme}><BrightnessMediumIcon/></IconButton>
+                            </Box>
                         </Box>
                     </Grid>
                     <Divider orientation='vertical' sx={{ marginRight: '-1px', display: { xs: 'none', md: 'block', lg: 'block' } }} />

@@ -23,7 +23,8 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import FlowwDashboard from "./integrals/FlowwDashboard";
 import HomeLogin from "./integrals/HomeLogin";
 import { serverURL } from "./middleware/FlowwServerParamConn";
-import { Box, LinearProgress, Typography } from '@mui/material';
+import { Box, CssBaseline, LinearProgress, ThemeProvider, Typography, createTheme } from '@mui/material';
+import { getCurrentTheme, setCurrentTheme } from './middleware/FlowwAppThemeController';
 
 const CheckAuth = (props) => {
   const [authenticated, setAuthenticated] = React.useState(false);
@@ -67,16 +68,48 @@ const CheckAuth = (props) => {
 }
 
 const App = () => {
+  const darkTheme = createTheme({
+    palette: {
+      mode: 'dark'
+    }
+  });
+
+  const lightTheme = createTheme({
+    palette: {
+      mode: 'light'
+    }
+  })
+
   const [authenticated, setAuthenticated] = React.useState(0);
   const [userData, setUserData] = React.useState({});
+  const [themeMode, setThemeMode] = React.useState(getCurrentTheme());
+  const [appTheme, setAppTheme] = React.useState((themeMode === 'light') ? lightTheme : darkTheme)
+
+  React.useEffect(() => {
+    setCurrentTheme(themeMode);
+    setAppTheme(
+      (themeMode === 'light') ? lightTheme : darkTheme
+    )
+  }, [themeMode])
+
+  const toggleTheme = () => {
+    setThemeMode(
+      (themeMode === 'light') ?
+      'dark' : 
+      'light'
+    )
+  }
 
   return (
-    <Routes>
-      <Route path="/" element={<Navigate to="/login" />} exact></Route>
-      <Route path="/login" element={<HomeLogin />} exact></Route>
-      <Route path="/dashboard/*" element={<CheckAuth setAuthenticated={setAuthenticated} setUserData={setUserData}><FlowwDashboard userData={userData} /></CheckAuth>}></Route>
-      <Route path="/classroom/*" element={<CollabViewEntry />} exact></Route>
-    </Routes>
+    <ThemeProvider theme={appTheme}>
+      <CssBaseline />
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" />} exact></Route>
+        <Route path="/login" element={<HomeLogin toggleTheme={toggleTheme} />} exact></Route>
+        <Route path="/dashboard/*" element={<CheckAuth setAuthenticated={setAuthenticated} setUserData={setUserData}><FlowwDashboard toggleTheme={toggleTheme} userData={userData} /></CheckAuth>}></Route>
+        <Route path="/classroom/*" element={<CollabViewEntry />} exact></Route>
+      </Routes>
+    </ThemeProvider>
   );
 }
 

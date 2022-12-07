@@ -22,6 +22,9 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import LogoutIcon from '@mui/icons-material/Logout';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -31,11 +34,12 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { Avatar, Divider } from '@mui/material';
+import { Avatar, Divider, ListItemIcon, ListItemText, alpha } from '@mui/material';
 import axios from 'axios';
 import { MD5 } from 'crypto-js';
 import { serverURL } from '../middleware/FlowwServerParamConn';
 import FlowwDashboardOrganizations from '../components/FlowwDashboardOrganizations';
+import { getCurrentTheme } from '../middleware/FlowwAppThemeController';
 
 const drawerWidth = 240;
 const FlowwDashboard = (props) => {
@@ -89,7 +93,7 @@ const FlowwDashboard = (props) => {
                 .then((res) => {
                     setTimeout(() => {
                         navigate("/");
-                        setBackdrop(false);                        
+                        setBackdrop(false);
                     }, 1000);
                 })
         }
@@ -122,7 +126,22 @@ const FlowwDashboard = (props) => {
                         </Box>
                     </MenuItem>
                     <Divider />
-                    <MenuItem onClick={logoutAction}>Logout</MenuItem>
+                    <MenuItem onClick={props.toggleTheme}>
+                        <ListItemIcon>
+                            {(getCurrentTheme() === 'light') ? <DarkModeIcon /> : <LightModeIcon />}
+                        </ListItemIcon>
+                        <ListItemText>
+                            {(getCurrentTheme() === 'light') ? "Dark Mode" : "Light Mode"}
+                        </ListItemText>
+                    </MenuItem>
+                    <MenuItem sx={{ ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={logoutAction}>
+                        <ListItemIcon>
+                            <LogoutIcon />
+                        </ListItemIcon>
+                        <ListItemText>
+                            Logout
+                        </ListItemText>
+                    </MenuItem>
                 </Menu>
             </Box>
         )

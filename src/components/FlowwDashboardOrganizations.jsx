@@ -21,11 +21,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import WarningIcon from '@mui/icons-material/Warning';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, OutlinedInput, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, ListSubheader, OutlinedInput, Typography } from '@mui/material';
 import axios from 'axios';
 import { serverURL } from '../middleware/FlowwServerParamConn';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { MD5 } from 'crypto-js';
 import CheckIcon from '@mui/icons-material/Check';
 
 const OrganizationsEditModal = (props) => {
@@ -137,10 +137,28 @@ const OrganizationsEditModal = (props) => {
                 <Accordion onChange={() => { (accordionState === 4) ? setAccordionState(0) : setAccordionState(4) }} expanded={(accordionState === 4)}>
                     <AccordionSummary sx={{ ".MuiAccordionSummary-content": { width: '90%' } }} expandIcon={<ExpandMoreIcon />}>
                         <Typography sx={{ width: '33%', flexShrink: 0 }}>Admins</Typography>
-                        <Typography sx={{ color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis' }}>Click to View</Typography>
+                        <Typography sx={{ color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis' }}>{(props.organization.administrators) ? `You${(props.organization.administrators.length > 1) ? `, ${props.organization.administrators.length - 1} Others` : ""}` : "You"}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        
+                        <List>
+                            {
+                                (!props.organization.administrators) ?
+                                <></> :
+                                props.organization.administrators.map((admin) => {
+                                    return (
+                                        <ListItem>
+                                            <ListItemAvatar>
+                                                <Avatar src={`https://www.gravatar.com/avatar/${MD5(admin.email.toLowerCase())}`}>{admin.fullName.charAt(0)}</Avatar>
+                                            </ListItemAvatar>
+                                            <ListItemText 
+                                                primary={admin.fullName}
+                                                secondary={admin.email}
+                                            />
+                                        </ListItem>
+                                    )
+                                })
+                            }
+                        </List>
                     </AccordionDetails>
                 </Accordion>
             </DialogContent>
