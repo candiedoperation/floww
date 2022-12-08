@@ -31,6 +31,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const OrganizationsEditModal = (props) => {
+    const [isConnecting, setIsConnecting] = React.useState(false);
     const [orgEditStates, setOrgEditStates] = React.useState({});
     const [accordionState, setAccordionState] = React.useState(0);
     const [organization, setOrganization] = React.useState({});
@@ -55,12 +56,21 @@ const OrganizationsEditModal = (props) => {
         }))
     }
 
-    const handleSubmit = (target) => {
-        switch (target) {
-            case 'orgName': {
-
-            }
-        }
+    const handleSubmit = (target, data) => {
+        setIsConnecting(true);
+        axios
+            .post(
+                `${serverURL}/api/orgz/${target}`, data,
+                { withCredentials: true }
+            )
+            .then((res) => {
+                setAccordionState(0);
+                setIsConnecting(false);
+                props.fetchOrganizations();
+            })
+            .catch((res) => {
+                //Alert
+            })
     }
 
     return (
@@ -75,7 +85,8 @@ const OrganizationsEditModal = (props) => {
                     <AccordionDetails>
                         <OutlinedInput
                             sx={{ width: '100%' }}
-                            endAdornment={<IconButton disabled={(orgEditStates["orgName"]) ? false : true} onClick={() => { handleSubmit('orgName') }}><CheckIcon /></IconButton>}
+                            disabled={isConnecting}
+                            endAdornment={<IconButton disabled={!isConnecting && (orgEditStates["orgName"]) ? false : true} onClick={() => { handleSubmit('updatename', { name: orgEditStates["orgName"], orgId: props.organization._id }) }}><CheckIcon /></IconButton>}
                             placeholder='Update Organization Name'
                             value={orgEditStates["orgName"]}
                             onChange={(e) => { updateOrgEditState("orgName", e.target.value) }}>
@@ -92,14 +103,15 @@ const OrganizationsEditModal = (props) => {
                             props.organization.contact.email.map((email, index) => {
                                 return (
                                     <OutlinedInput
+                                        disabled={isConnecting}
                                         sx={{ width: '100%', marginBottom: '10px' }}
                                         placeholder='Edit Email Address'
                                         value={orgEditStates[`orgEmail${index}`]}
                                         onChange={(e) => { updateOrgEditState(`orgEmail${index}`, e.target.value) }}
                                         endAdornment={
                                             <Box sx={{ display: 'flex' }}>
-                                                <IconButton disabled={(orgEditStates[`orgEmail${index}`] && orgEditStates[`orgEmail${index}`] != email) ? false : true} onClick={() => { handleSubmit('updEmail', index) }}><CheckIcon /></IconButton>
-                                                <IconButton sx={{ color: 'error.main', ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={() => { handleSubmit('delEmail', index) }}><DeleteIcon sx={{ color: 'inherit' }} /></IconButton>
+                                                <IconButton disabled={(!isConnecting && orgEditStates[`orgEmail${index}`] && orgEditStates[`orgEmail${index}`] != email) ? false : true} onClick={() => { handleSubmit('updateemail', { orgId: props.organization._id, oldEmail: email, newEmail: orgEditStates[`orgEmail${index}`] }) }}><CheckIcon /></IconButton>
+                                                <IconButton disabled={(!isConnecting && props.organization.contact.email.length > 1) ? false : true} sx={{ color: 'error.main', ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={() => { handleSubmit('delEmail', index) }}><DeleteIcon sx={{ color: 'inherit' }} /></IconButton>
                                             </Box>
                                         }
                                     >
@@ -107,8 +119,9 @@ const OrganizationsEditModal = (props) => {
                                 )
                             })}
                         <OutlinedInput
+                            disabled={isConnecting}
                             sx={{ width: '100%' }}
-                            endAdornment={<IconButton disabled={(orgEditStates["orgEmailNew"]) ? false : true} onClick={() => { handleSubmit('orgEmailNew') }}><CheckIcon /></IconButton>}
+                            endAdornment={<IconButton disabled={!isConnecting && (orgEditStates["orgEmailNew"]) ? false : true} onClick={() => { handleSubmit('orgEmailNew') }}><CheckIcon /></IconButton>}
                             placeholder='Add an Email Address'
                             value={orgEditStates["orgEmailNew"]}
                             onChange={(e) => { updateOrgEditState("orgEmailNew", e.target.value) }}>
@@ -125,14 +138,15 @@ const OrganizationsEditModal = (props) => {
                             props.organization.contact.tel.map((tel, index) => {
                                 return (
                                     <OutlinedInput
+                                        disabled={isConnecting}
                                         sx={{ width: '100%', marginBottom: '10px' }}
                                         placeholder='Edit Phone Number'
                                         value={orgEditStates[`orgTel${index}`]}
                                         onChange={(e) => { updateOrgEditState(`orgTel${index}`, e.target.value) }}
                                         endAdornment={
                                             <Box sx={{ display: 'flex' }}>
-                                                <IconButton disabled={(orgEditStates[`orgTel${index}`] && orgEditStates[`orgTel${index}`] != tel) ? false : true} onClick={() => { handleSubmit('updTel', index) }}><CheckIcon /></IconButton>
-                                                <IconButton sx={{ color: 'error.main', ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={() => { handleSubmit('delTel', index) }}><DeleteIcon sx={{ color: 'inherit' }} /></IconButton>
+                                                <IconButton disabled={!isConnecting && (orgEditStates[`orgTel${index}`] && orgEditStates[`orgTel${index}`] != tel) ? false : true} onClick={() => { handleSubmit('updTel', index) }}><CheckIcon /></IconButton>
+                                                <IconButton disabled={(!isConnecting && props.organization.contact.tel.length > 1) ? false : true} sx={{ color: 'error.main', ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={() => { handleSubmit('delTel', index) }}><DeleteIcon sx={{ color: 'inherit' }} /></IconButton>
                                             </Box>
                                         }
                                     >
@@ -140,8 +154,9 @@ const OrganizationsEditModal = (props) => {
                                 )
                             })}
                         <OutlinedInput
+                            disabled={isConnecting}
                             sx={{ width: '100%' }}
-                            endAdornment={<IconButton disabled={(orgEditStates["orgTelNew"]) ? false : true} onClick={() => { handleSubmit('orgTelNew') }}><CheckIcon /></IconButton>}
+                            endAdornment={<IconButton disabled={!isConnecting && (orgEditStates["orgTelNew"]) ? false : true} onClick={() => { handleSubmit('orgTelNew') }}><CheckIcon /></IconButton>}
                             placeholder='Add a Phone Number'
                             value={orgEditStates["orgTelNew"]}
                             onChange={(e) => { updateOrgEditState("orgTelNew", e.target.value) }}>
@@ -155,8 +170,9 @@ const OrganizationsEditModal = (props) => {
                     </AccordionSummary>
                     <AccordionDetails>
                         <OutlinedInput
+                            disabled={isConnecting}
                             sx={{ width: '100%' }}
-                            endAdornment={<IconButton disabled={(orgEditStates["orgInviteAdmin"]) ? false : true} onClick={() => { handleSubmit('orgInviteAdmin') }}><SendIcon /></IconButton>}
+                            endAdornment={<IconButton disabled={!isConnecting && (orgEditStates["orgInviteAdmin"]) ? false : true} onClick={() => { handleSubmit('orgInviteAdmin') }}><SendIcon /></IconButton>}
                             placeholder='Invite an Admin'
                             value={orgEditStates["orgInviteAdmin"]}
                             onChange={(e) => { updateOrgEditState("orgInviteAdmin", e.target.value) }}>
@@ -185,7 +201,7 @@ const OrganizationsEditModal = (props) => {
                                                     primary={admin.fullName}
                                                     secondary={admin.email}
                                                 />
-                                                <IconButton disabled={(props.organization.administrators.length < 2)} sx={{ color: 'error.main', ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={() => { handleSubmit('delAdmin', admin._id) }}><DeleteIcon sx={{ color: 'inherit' }} /></IconButton>
+                                                <IconButton disabled={(!isConnecting && props.organization.administrators.length > 1) ? false : true} sx={{ color: 'error.main', ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={() => { handleSubmit('delAdmin', admin._id) }}><DeleteIcon sx={{ color: 'inherit' }} /></IconButton>
                                             </ListItem>
                                         )
                                     })
@@ -207,7 +223,7 @@ const FlowwDashboardOrganizations = (props) => {
     const [orgEditModalOpen, setOrgEditModalOpen] = React.useState(false);
     const [orgEditModalChoice, setOrgEditModalChoice] = React.useState({});
 
-    React.useEffect(() => {
+    const fetchOrganizations = () => {
         axios
             .get(`${serverURL}/api/user/memberoforg`,
                 { withCredentials: true }
@@ -218,7 +234,10 @@ const FlowwDashboardOrganizations = (props) => {
             .catch((res) => {
                 //Alert
             })
-    }, []);
+            .finally(() => {
+                setOrgEditModalOpen(false);
+            })
+    }
 
     const handleCollapse = (trigger) => {
         if (trigger == collapseOpen) {
@@ -228,9 +247,13 @@ const FlowwDashboardOrganizations = (props) => {
         }
     }
 
+    React.useEffect(() => {
+        fetchOrganizations();
+    }, []);
+
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', maxHeight: '100%', width: '100%' }}>
-            <OrganizationsEditModal organization={orgEditModalChoice} open={orgEditModalOpen} onClose={() => { setOrgEditModalOpen(false) }} />
+            <OrganizationsEditModal fetchOrganizations={fetchOrganizations} organization={orgEditModalChoice} open={orgEditModalOpen} onClose={() => { setOrgEditModalOpen(false) }} />
             <Box>
                 <Box sx={{ display: 'flex' }}>
                     <Button variant="contained" startIcon={<AddIcon />}>Create Organization</Button>
