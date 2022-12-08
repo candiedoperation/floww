@@ -20,13 +20,15 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import SendIcon from '@mui/icons-material/Send';
 import WarningIcon from '@mui/icons-material/Warning';
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, ListSubheader, OutlinedInput, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, ListSubheader, OutlinedInput, Typography, alpha } from '@mui/material';
 import axios from 'axios';
 import { serverURL } from '../middleware/FlowwServerParamConn';
 import * as React from 'react';
 import { MD5 } from 'crypto-js';
 import CheckIcon from '@mui/icons-material/Check';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const OrganizationsEditModal = (props) => {
     const [orgEditStates, setOrgEditStates] = React.useState({});
@@ -91,10 +93,16 @@ const OrganizationsEditModal = (props) => {
                                 return (
                                     <OutlinedInput
                                         sx={{ width: '100%', marginBottom: '10px' }}
-                                        endAdornment={<IconButton disabled={(orgEditStates[`orgEmail${index}`]) ? false : true} onClick={() => { handleSubmit(`orgEmail${index}`) }}><CheckIcon /></IconButton>}
                                         placeholder='Edit Email Address'
                                         value={orgEditStates[`orgEmail${index}`]}
-                                        onChange={(e) => { updateOrgEditState(`orgEmail${index}`, e.target.value) }}>
+                                        onChange={(e) => { updateOrgEditState(`orgEmail${index}`, e.target.value) }}
+                                        endAdornment={
+                                            <Box sx={{ display: 'flex' }}>
+                                                <IconButton disabled={(orgEditStates[`orgEmail${index}`] && orgEditStates[`orgEmail${index}`] != email) ? false : true} onClick={() => { handleSubmit('updEmail', index) }}><CheckIcon /></IconButton>
+                                                <IconButton sx={{ color: 'error.main', ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={() => { handleSubmit('delEmail', index) }}><DeleteIcon sx={{ color: 'inherit' }} /></IconButton>
+                                            </Box>
+                                        }
+                                    >
                                     </OutlinedInput>
                                 )
                             })}
@@ -118,10 +126,16 @@ const OrganizationsEditModal = (props) => {
                                 return (
                                     <OutlinedInput
                                         sx={{ width: '100%', marginBottom: '10px' }}
-                                        endAdornment={<IconButton disabled={(orgEditStates[`orgTel${index}`]) ? false : true} onClick={() => { handleSubmit(`orgTel${index}`) }}><CheckIcon /></IconButton>}
                                         placeholder='Edit Phone Number'
                                         value={orgEditStates[`orgTel${index}`]}
-                                        onChange={(e) => { updateOrgEditState(`orgTel${index}`, e.target.value) }}>
+                                        onChange={(e) => { updateOrgEditState(`orgTel${index}`, e.target.value) }}
+                                        endAdornment={
+                                            <Box sx={{ display: 'flex' }}>
+                                                <IconButton disabled={(orgEditStates[`orgTel${index}`] && orgEditStates[`orgTel${index}`] != tel) ? false : true} onClick={() => { handleSubmit('updTel', index) }}><CheckIcon /></IconButton>
+                                                <IconButton sx={{ color: 'error.main', ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={() => { handleSubmit('delTel', index) }}><DeleteIcon sx={{ color: 'inherit' }} /></IconButton>
+                                            </Box>
+                                        }
+                                    >
                                     </OutlinedInput>
                                 )
                             })}
@@ -140,23 +154,40 @@ const OrganizationsEditModal = (props) => {
                         <Typography sx={{ color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis' }}>{(props.organization.administrators) ? `You${(props.organization.administrators.length > 1) ? `, ${props.organization.administrators.length - 1} Others` : ""}` : "You"}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
+                        <OutlinedInput
+                            sx={{ width: '100%' }}
+                            endAdornment={<IconButton disabled={(orgEditStates["orgInviteAdmin"]) ? false : true} onClick={() => { handleSubmit('orgInviteAdmin') }}><SendIcon /></IconButton>}
+                            placeholder='Invite an Admin'
+                            value={orgEditStates["orgInviteAdmin"]}
+                            onChange={(e) => { updateOrgEditState("orgInviteAdmin", e.target.value) }}>
+                        </OutlinedInput>
                         <List>
+                            <ListSubheader>Invited Admins</ListSubheader>
+                            {
+                                (!props.organization.invitedAdministrators || props.organization.invitedAdministrators === []) ?
+                                    <ListItem>
+                                        <ListItemIcon><WarningIcon /></ListItemIcon>
+                                        <ListItemText primary="There isn't anyone"></ListItemText>
+                                    </ListItem> :
+                                    props.organization.invitedAdministrators.map((admin) => { })
+                            }
+                            <ListSubheader>Current Admins</ListSubheader>
                             {
                                 (!props.organization.administrators) ?
-                                <></> :
-                                props.organization.administrators.map((admin) => {
-                                    return (
-                                        <ListItem>
-                                            <ListItemAvatar>
-                                                <Avatar src={`https://www.gravatar.com/avatar/${MD5(admin.email.toLowerCase())}`}>{admin.fullName.charAt(0)}</Avatar>
-                                            </ListItemAvatar>
-                                            <ListItemText 
-                                                primary={admin.fullName}
-                                                secondary={admin.email}
-                                            />
-                                        </ListItem>
-                                    )
-                                })
+                                    <></> :
+                                    props.organization.administrators.map((admin) => {
+                                        return (
+                                            <ListItem>
+                                                <ListItemAvatar>
+                                                    <Avatar src={`https://www.gravatar.com/avatar/${MD5(admin.email.toLowerCase())}`}>{admin.fullName.charAt(0)}</Avatar>
+                                                </ListItemAvatar>
+                                                <ListItemText
+                                                    primary={admin.fullName}
+                                                    secondary={admin.email}
+                                                />
+                                            </ListItem>
+                                        )
+                                    })
                             }
                         </List>
                     </AccordionDetails>
@@ -217,8 +248,8 @@ const FlowwDashboardOrganizations = (props) => {
                                         <ListItemText sx={{ marginLeft: '10px' }} primary={organization.name} secondary={organization.contact.email[0]} />
                                         {
                                             (organization.administrators.find(({ _id }) => _id === props.userData.id)) ?
-                                            <IconButton onClick={() => { setOrgEditModalChoice(organization); setOrgEditModalOpen(true); }}><EditIcon /></IconButton> : 
-                                            <></>
+                                                <IconButton onClick={() => { setOrgEditModalChoice(organization); setOrgEditModalOpen(true); }}><EditIcon /></IconButton> :
+                                                <></>
                                         }
                                     </ListItemButton>
                                     <Collapse sx={{ marginLeft: '35px' }} in={(collapseOpen === organization.name) ? true : false} unmountOnExit>
