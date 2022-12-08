@@ -61,6 +61,10 @@ const FlowwDashboard = (props) => {
     }, [pageLocation]);
 
     React.useEffect(() => {
+        document.title = `Floww ➜ ${currentPage}`
+    }, [currentPage]);
+
+    React.useEffect(() => {
         setUserAvatar(`https://www.gravatar.com/avatar/${MD5(props.userData.email.toLowerCase())}`)
     }, []);
 
