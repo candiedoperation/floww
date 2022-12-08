@@ -185,6 +185,7 @@ const OrganizationsEditModal = (props) => {
                                                     primary={admin.fullName}
                                                     secondary={admin.email}
                                                 />
+                                                <IconButton disabled={(props.organization.administrators.length < 2)} sx={{ color: 'error.main', ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={() => { handleSubmit('delAdmin', admin._id) }}><DeleteIcon sx={{ color: 'inherit' }} /></IconButton>
                                             </ListItem>
                                         )
                                     })
