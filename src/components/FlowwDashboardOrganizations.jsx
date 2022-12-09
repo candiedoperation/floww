@@ -65,6 +65,7 @@ const OrganizationsEditModal = (props) => {
             )
             .then((res) => {
                 setAccordionState(0);
+                setOrgEditStates((orgEditStates) => ({}));
                 setIsConnecting(false);
                 props.fetchOrganizations();
             })
@@ -121,7 +122,7 @@ const OrganizationsEditModal = (props) => {
                         <OutlinedInput
                             disabled={isConnecting}
                             sx={{ width: '100%' }}
-                            endAdornment={<IconButton disabled={!isConnecting && (orgEditStates["orgEmailNew"]) ? false : true} onClick={() => { handleSubmit('orgEmailNew') }}><CheckIcon /></IconButton>}
+                            endAdornment={<IconButton disabled={!isConnecting && (orgEditStates["orgEmailNew"]) ? false : true} onClick={() => { handleSubmit('addemail', { orgId: props.organization._id, email: orgEditStates[`orgEmailNew`] }) }}><CheckIcon /></IconButton>}
                             placeholder='Add an Email Address'
                             value={orgEditStates["orgEmailNew"]}
                             onChange={(e) => { updateOrgEditState("orgEmailNew", e.target.value) }}>
@@ -156,7 +157,7 @@ const OrganizationsEditModal = (props) => {
                         <OutlinedInput
                             disabled={isConnecting}
                             sx={{ width: '100%' }}
-                            endAdornment={<IconButton disabled={!isConnecting && (orgEditStates["orgTelNew"]) ? false : true} onClick={() => { handleSubmit('orgTelNew') }}><CheckIcon /></IconButton>}
+                            endAdornment={<IconButton disabled={!isConnecting && (orgEditStates["orgTelNew"]) ? false : true} onClick={() => { handleSubmit('addtel', { orgId: props.organization._id, tel: orgEditStates[`orgTelNew`] }) }}><CheckIcon /></IconButton>}
                             placeholder='Add a Phone Number'
                             value={orgEditStates["orgTelNew"]}
                             onChange={(e) => { updateOrgEditState("orgTelNew", e.target.value) }}>
