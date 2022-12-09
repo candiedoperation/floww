@@ -233,6 +233,7 @@ const OrganizationsEditModal = (props) => {
 }
 
 const FlowwDashboardOrganizations = (props) => {
+    const [notifications, setNotifications] = React.useState([]);
     const [organizations, setOrganizations] = React.useState([]);
     const [collapseOpen, setCollapseOpen] = React.useState(0);
     const [orgEditModalOpen, setOrgEditModalOpen] = React.useState(false);
@@ -254,6 +255,37 @@ const FlowwDashboardOrganizations = (props) => {
             })
     }
 
+    const getNotifications = () => {
+        axios
+            .get(
+                `${serverURL}/api/user/notifications`,
+                { withCredentials: true }
+            )
+            .then((res) => {
+                setNotifications((notifications) => res.data)
+            })
+            .catch((res) => {
+                //Log the error
+            })
+    }
+
+    const handleSubmit = (target, data) => {
+        axios
+            .post(
+                `${serverURL}/api/orgz/${target}`, data,
+                { withCredentials: true }
+            )
+            .then((res) => {
+                switch (target) {
+                    case 'inviteadminreject':
+                        getNotifications();
+                }
+            })
+            .catch((res) => {
+                //Alert
+            })
+    }
+
     const handleCollapse = (trigger) => {
         if (trigger == collapseOpen) {
             setCollapseOpen(0);
@@ -264,16 +296,45 @@ const FlowwDashboardOrganizations = (props) => {
 
     React.useEffect(() => {
         fetchOrganizations();
+        getNotifications();
     }, []);
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', maxHeight: '100%', width: '100%' }}>
             <OrganizationsEditModal fetchOrganizations={fetchOrganizations} organization={orgEditModalChoice} open={orgEditModalOpen} onClose={() => { setOrgEditModalOpen(false) }} />
             <Box>
-                <Box sx={{ display: 'flex' }}>
+                <Box sx={{ display: 'flex', paddingBottom: '15px' }}>
                     <Button variant="contained" startIcon={<AddIcon />}>Create Organization</Button>
                 </Box>
-                <Typography variant='h4' sx={{ fontWeight: 'medium', color: 'text.secondary', paddingTop: '15px' }}>You're a part of...</Typography>
+                {
+                    (notifications.map(key => key.category).indexOf("inviteadmin") < 0) ?
+                        <></> :
+                        <Box>
+                            <Typography variant='h4' sx={{ fontWeight: 'medium', color: 'text.secondary' }}>Admin Invites!</Typography>
+                            <List>
+                                {
+                                    notifications.map((notification) => {
+                                        if (notification.category === "inviteadmin") {
+                                            return (
+                                                <ListItem>
+                                                    <ListItemAvatar>
+                                                        <Avatar src={`https://www.gravatar.com/avatar/${MD5(notification.content.invitor.email.toLowerCase())}`}>{notification.content.invitor.name.charAt(0)}</Avatar>
+                                                    </ListItemAvatar>
+                                                    <ListItemText
+                                                        primary={notification.content.invitor.name}
+                                                        secondary={`You can accept to join ${notification.content.orgData.orgName} as an Admin, or Reject the Invite`}
+                                                    />
+                                                    <IconButton sx={{ color: 'success.dark', ":hover": { backgroundColor: (theme) => alpha(theme.palette.success.light, 0.2) } }} onClick={() => { }}><CheckIcon sx={{ color: 'inherit' }} /></IconButton>
+                                                    <IconButton sx={{ color: 'error.main', ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={() => { handleSubmit('inviteadminreject', { orgId: notification.content.orgData.orgId, inviteId: notification._id }) }}><CancelIcon sx={{ color: 'inherit' }} /></IconButton>
+                                                </ListItem>
+                                            )
+                                        }
+                                    })
+                                }
+                            </List>
+                        </Box>
+                }
+                <Typography variant='h4' sx={{ fontWeight: 'medium', color: 'text.secondary' }}>You're a part of...</Typography>
             </Box>
             <List sx={{ overflow: 'scroll', flexGrow: 1 }}>
                 {
