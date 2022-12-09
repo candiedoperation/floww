@@ -18,6 +18,7 @@
 
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
+import CancelIcon from '@mui/icons-material/Cancel';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SendIcon from '@mui/icons-material/Send';
@@ -181,12 +182,25 @@ const OrganizationsEditModal = (props) => {
                         <List>
                             <ListSubheader>Invited Admins</ListSubheader>
                             {
-                                (!props.organization.invitedAdministrators || props.organization.invitedAdministrators === []) ?
+                                (!props.organization.invitedAdministrators || props.organization.invitedAdministrators.length < 1) ?
                                     <ListItem>
                                         <ListItemIcon><WarningIcon /></ListItemIcon>
                                         <ListItemText primary="There isn't anyone"></ListItemText>
                                     </ListItem> :
-                                    props.organization.invitedAdministrators.map((admin) => { })
+                                    props.organization.invitedAdministrators.map((invitedAdmin) => {
+                                        return (
+                                            <ListItem>
+                                                <ListItemAvatar>
+                                                    <Avatar src={`https://www.gravatar.com/avatar/${MD5(invitedAdmin.invitee.email.toLowerCase())}`}>{invitedAdmin.invitee.fullName.charAt(0)}</Avatar>
+                                                </ListItemAvatar>
+                                                <ListItemText
+                                                    primary={invitedAdmin.invitee.fullName}
+                                                    secondary={invitedAdmin.invitee.email}
+                                                />
+                                                <IconButton disabled={isConnecting} sx={{ color: 'error.main', ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={() => { /* DELINVITE */ }}><CancelIcon sx={{ color: 'inherit' }} /></IconButton>
+                                            </ListItem>
+                                        )
+                                    })
                             }
                             <ListSubheader>Current Admins</ListSubheader>
                             {
