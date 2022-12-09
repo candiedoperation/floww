@@ -277,8 +277,16 @@ const FlowwDashboardOrganizations = (props) => {
             )
             .then((res) => {
                 switch (target) {
-                    case 'inviteadminreject':
+                    case 'inviteadminreject': {
                         getNotifications();
+                        break;
+                    }
+
+                    case 'inviteadminaccept': {
+                        getNotifications();
+                        fetchOrganizations();
+                        break;
+                    }
                 }
             })
             .catch((res) => {
@@ -310,7 +318,7 @@ const FlowwDashboardOrganizations = (props) => {
                     (notifications.map(key => key.category).indexOf("inviteadmin") < 0) ?
                         <></> :
                         <Box>
-                            <Typography variant='h4' sx={{ fontWeight: 'medium', color: 'text.secondary' }}>Admin Invites!</Typography>
+                            <Typography variant='h4' sx={{ fontWeight: 'medium', color: 'text.secondary' }}>Admin Invites...</Typography>
                             <List>
                                 {
                                     notifications.map((notification) => {
@@ -324,7 +332,7 @@ const FlowwDashboardOrganizations = (props) => {
                                                         primary={notification.content.invitor.name}
                                                         secondary={`You can accept to join ${notification.content.orgData.orgName} as an Admin, or Reject the Invite`}
                                                     />
-                                                    <IconButton sx={{ color: 'success.dark', ":hover": { backgroundColor: (theme) => alpha(theme.palette.success.light, 0.2) } }} onClick={() => { }}><CheckIcon sx={{ color: 'inherit' }} /></IconButton>
+                                                    <IconButton sx={{ color: 'success.dark', ":hover": { backgroundColor: (theme) => alpha(theme.palette.success.light, 0.2) } }} onClick={() => { handleSubmit('inviteadminaccept', { orgId: notification.content.orgData.orgId, inviteId: notification._id }) }}><CheckIcon sx={{ color: 'inherit' }} /></IconButton>
                                                     <IconButton sx={{ color: 'error.main', ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={() => { handleSubmit('inviteadminreject', { orgId: notification.content.orgData.orgId, inviteId: notification._id }) }}><CancelIcon sx={{ color: 'inherit' }} /></IconButton>
                                                 </ListItem>
                                             )
