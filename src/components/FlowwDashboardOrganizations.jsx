@@ -174,7 +174,7 @@ const OrganizationsEditModal = (props) => {
                         <OutlinedInput
                             disabled={isConnecting}
                             sx={{ width: '100%' }}
-                            endAdornment={<IconButton disabled={!isConnecting && (orgEditStates["orgInviteAdmin"]) ? false : true} onClick={() => { handleSubmit('orgInviteAdmin') }}><SendIcon /></IconButton>}
+                            endAdornment={<IconButton disabled={!isConnecting && (orgEditStates["orgInviteAdmin"]) ? false : true} onClick={() => { handleSubmit('inviteadmin', { orgId: props.organization._id, adminEmail: orgEditStates["orgInviteAdmin"] }) }}><SendIcon /></IconButton>}
                             placeholder='Invite an Admin'
                             value={orgEditStates["orgInviteAdmin"]}
                             onChange={(e) => { updateOrgEditState("orgInviteAdmin", e.target.value) }}>
@@ -197,7 +197,7 @@ const OrganizationsEditModal = (props) => {
                                                     primary={invitedAdmin.invitee.fullName}
                                                     secondary={invitedAdmin.invitee.email}
                                                 />
-                                                <IconButton disabled={isConnecting} sx={{ color: 'error.main', ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={() => { /* DELINVITE */ }}><CancelIcon sx={{ color: 'inherit' }} /></IconButton>
+                                                <IconButton disabled={isConnecting} sx={{ color: 'error.main', ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={() => { handleSubmit('inviteadminreject', { orgId: props.organization._id, inviteId: invitedAdmin.inviteId }) }}><CancelIcon sx={{ color: 'inherit' }} /></IconButton>
                                             </ListItem>
                                         )
                                     })
