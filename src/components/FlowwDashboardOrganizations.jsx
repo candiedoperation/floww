@@ -111,7 +111,7 @@ const OrganizationsEditModal = (props) => {
                                         endAdornment={
                                             <Box sx={{ display: 'flex' }}>
                                                 <IconButton disabled={(!isConnecting && orgEditStates[`orgEmail${index}`] && orgEditStates[`orgEmail${index}`] != email) ? false : true} onClick={() => { handleSubmit('updateemail', { orgId: props.organization._id, oldEmail: email, newEmail: orgEditStates[`orgEmail${index}`] }) }}><CheckIcon /></IconButton>
-                                                <IconButton disabled={(!isConnecting && props.organization.contact.email.length > 1) ? false : true} sx={{ color: 'error.main', ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={() => { handleSubmit('delEmail', index) }}><DeleteIcon sx={{ color: 'inherit' }} /></IconButton>
+                                                <IconButton disabled={(!isConnecting && props.organization.contact.email.length > 1) ? false : true} sx={{ color: 'error.main', ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={() => { handleSubmit('deleteemail', { orgId: props.organization._id, email: email }) }}><DeleteIcon sx={{ color: 'inherit' }} /></IconButton>
                                             </Box>
                                         }
                                     >
@@ -145,8 +145,8 @@ const OrganizationsEditModal = (props) => {
                                         onChange={(e) => { updateOrgEditState(`orgTel${index}`, e.target.value) }}
                                         endAdornment={
                                             <Box sx={{ display: 'flex' }}>
-                                                <IconButton disabled={!isConnecting && (orgEditStates[`orgTel${index}`] && orgEditStates[`orgTel${index}`] != tel) ? false : true} onClick={() => { handleSubmit('updTel', index) }}><CheckIcon /></IconButton>
-                                                <IconButton disabled={(!isConnecting && props.organization.contact.tel.length > 1) ? false : true} sx={{ color: 'error.main', ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={() => { handleSubmit('delTel', index) }}><DeleteIcon sx={{ color: 'inherit' }} /></IconButton>
+                                                <IconButton disabled={!isConnecting && (orgEditStates[`orgTel${index}`] && orgEditStates[`orgTel${index}`] != tel) ? false : true} onClick={() => { handleSubmit('updatetel', { orgId: props.organization._id, oldTel: tel, newTel: orgEditStates[`orgTel${index}`] }) }}><CheckIcon /></IconButton>
+                                                <IconButton disabled={(!isConnecting && props.organization.contact.tel.length > 1) ? false : true} sx={{ color: 'error.main', ":hover": { backgroundColor: (theme) => alpha(theme.palette.error.dark, 0.2) } }} onClick={() => { handleSubmit('deletetel', { orgId: props.organization._id, tel: tel }) }}><DeleteIcon sx={{ color: 'inherit' }} /></IconButton>
                                             </Box>
                                         }
                                     >
